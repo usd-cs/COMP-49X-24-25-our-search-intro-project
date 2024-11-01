@@ -23,6 +23,8 @@ dependencies {
 	implementation("com.mysql:mysql-connector-j:9.1.0")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	// https://mvnrepository.com/artifact/com.h2database/h2
+	testImplementation("com.h2database:h2:2.3.232")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
