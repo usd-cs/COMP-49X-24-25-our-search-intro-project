@@ -37,6 +37,7 @@
     ]
   },
   "jest": {
+    "setupFilesAfterEnv": ["<rootDir>/setUpTests.js"],
     "coverageThreshold": {
         "global": {
             "lines": 80
