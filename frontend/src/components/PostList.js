@@ -3,7 +3,7 @@ import { Button, Container, Typography, Box } from "@mui/material";
 import axios from 'axios';
 import Post from '/Post';
 
-const PostList = ( {userId, isAuthenticated} ) => {
+const PostList = ( {userName, isAuthenticated} ) => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
   const [newPostContent, setNewPostContent] = useState('');
