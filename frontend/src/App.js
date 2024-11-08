@@ -4,79 +4,104 @@ import './App.css';
 import Login from "./components/Login";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-  const [userName, setuserName] = useState('');
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [showLogin, setShowLogin] = useState(false);
+    const [userName, setuserName] = useState('');
 
-  const handleLogin = (email, password) => {
-     // call backend 
-     // if backend returns true, setIsAuthenticated to true and setShowLogin false
-     // get userName from backend response
-     // set isAuthenticated and userName in session storage
-  };
+    const handleLogin = (email, password) => {
+        // call backend 
+        // if backend returns true, setIsAuthenticated to true and setShowLogin false
+        // get userName from backend response
+        // set isAuthenticated and userName in session storage
+    };
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('userName');
-    sessionStorage.removeItem('isAuthenticated');
-    setuserName('');
-    setIsAuthenticated(false);
-  };
+    const handleLogout = () => {
+        sessionStorage.removeItem('userName');
+        sessionStorage.removeItem('isAuthenticated');
+        setuserName('');
+        setIsAuthenticated(false);
+    };
 
-  const showLoginForm = () => {
-    setShowLogin(true);
-    sessionStorage.setItem('showLogin', true)
-  };
-
-  useEffect(() => {
-    // Handle user session persistence
-    const userName = sessionStorage.getItem('userName');
-    const isAuthenticated = sessionStorage.getItem('isAuthenticated');
-    if (userName && isAuthenticated) { 
-        setuserName(userName);
-        setIsAuthenticated(isAuthenticated);
-    }
-  }, [userName, isAuthenticated]);
-
-  useEffect(() => {
-    // Handle sesson persistence for showing login page
-    const showLogin = sessionStorage.getItem('showLogin');
-    if (showLogin) {
+    const showLoginForm = () => {
         setShowLogin(true);
-    }
-  }, [showLogin]);
+        sessionStorage.setItem('showLogin', true)
+    };
 
-  return (
-    <Container maxWidth="sm">
-        <Box textAlign="center" mt={5}>
+    useEffect(() => {
+        // Handle user session persistence
+        const userName = sessionStorage.getItem('userName');
+        const isAuthenticated = sessionStorage.getItem('isAuthenticated');
+        if (userName && isAuthenticated) {
+            setuserName(userName);
+            setIsAuthenticated(isAuthenticated);
+        }
+    }, [userName, isAuthenticated]);
 
-            <Typography variant="h4" component="h1" gutterBottom>
-            Intro Project
-            </Typography>
+    useEffect(() => {
+        // Handle sesson persistence for showing login page
+        const showLogin = sessionStorage.getItem('showLogin');
+        if (showLogin) {
+            setShowLogin(true);
+        }
+    }, [showLogin]);
 
-            {showLogin ? (
+    const renderLogin = () => {
+        if (showLogin) {
+            return (
+                <Login onLogin={handleLogin} setShowLogin={setShowLogin} />
+            );
+        } else {
+            return renderButtons();
+        }
+    };
+
+    const renderButtons = () => {
+        let buttonContent;
+
+        if (isAuthenticated) {
+            buttonContent = (
                 <>
-                <Login onLogin={handleLogin} setShowLogin={setShowLogin}></Login>
-                </>
-            ) : (
-                <>
-                {isAuthenticated ? (
-                    <>
                     <Button variant="outlined" color="primary" onClick={handleLogout}>Logout</Button>
-                    <p> button to create post here </p>
-                    </>
-                ) : (
-                    <>
-                    <Button variant="outlined" color="primary" onClick={showLoginForm}>Login</Button>
-                    </>
-                )}
+                    <p>button to create post here</p>
+                </>
+            );
+        } else {
+            buttonContent = (
+                <Button variant="outlined" color="primary" onClick={showLoginForm}>Login</Button>
+            );
+        }
+
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    width: '100%',
+                    position: 'relative'
+                }}
+            >
+                <Typography variant="h4" component="h1" gutterBottom>
+                    Intro Project
+                </Typography>
+                {buttonContent}
+            </Box>
+        );
+    }
+
+    return (
+        <Container maxWidth="lg">
+            <Box textAlign="center" mt={5}>
+
+                {renderLogin()}
+
                 <Typography variant="body1" mt={2}>
                     Insert posts here
                 </Typography>
-                </>
-            )}
-        </Box>
-    </Container>
-  );
+            </Box>
+        </Container>
+
+    );
     // render postlist because posts show regardless of if logged in or not
     // pass userName to postlist in case the user creates a new post
 }
