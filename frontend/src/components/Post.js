@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { Button, Container, Typography, Box } from "@mui/material";
 
-const Post = ({ post }) => {
+const Post = ({ postData }) => {
+
+    const { userName, contents, comments } = postData;
 
 //   return (
    // the contents of the post
