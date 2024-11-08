@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Button, Container, Typography, Box } from "@mui/material";
 import './App.css';
+import Login from "./components/Login";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -14,21 +16,67 @@ function App() {
   };
 
   const handleLogout = () => {
-    // remove isAuthenticated and userId from session storage
+    sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('isAuthenticated');
+    setUserId('');
+    setIsAuthenticated(false);
+  };
+
+  const showLoginForm = () => {
+    setShowLogin(true);
+    sessionStorage.setItem('showLogin', true)
   };
 
   useEffect(() => {
-    // Handle user session persistence on page reload
-    // check if session storage has isAuthenticated and userId -- if so, set them
-  }, []);
+    // Handle user session persistence
+    const userId = sessionStorage.getItem('userId');
+    const isAuthenticated = sessionStorage.getItem('isAuthenticated');
+    if (userId && isAuthenticated) { 
+        setUserId(userId);
+        setIsAuthenticated(isAuthenticated);
+    }
+  }, [userId, isAuthenticated]);
+
+  useEffect(() => {
+    // Handle sesson persistence for showing login page
+    const showLogin = sessionStorage.getItem('showLogin');
+    if (showLogin) {
+        setShowLogin(true);
+    }
+  }, [showLogin]);
 
   return (
-  <h1>test</h1>
-  );
-  // login button - showlogin true if login button is clicked
-    // handleLogin gets passed to Login component
-    // logout button - isAuthenticated false if logout button is clicked
+    <Container maxWidth="sm">
+        <Box textAlign="center" mt={5}>
 
+            <Typography variant="h4" component="h1" gutterBottom>
+            Intro Project
+            </Typography>
+
+            {showLogin ? (
+                <>
+                <Login onLogin={handleLogin} setShowLogin={setShowLogin}></Login>
+                </>
+            ) : (
+                <>
+                {isAuthenticated ? (
+                    <>
+                    <Button variant="outlined" color="primary" onClick={handleLogout}>Logout</Button>
+                    <p> button to create post here </p>
+                    </>
+                ) : (
+                    <>
+                    <Button variant="outlined" color="primary" onClick={showLoginForm}>Login</Button>
+                    </>
+                )}
+                <Typography variant="body1" mt={2}>
+                    Insert posts here
+                </Typography>
+                </>
+            )}
+        </Box>
+    </Container>
+  );
     // render postlist because posts show regardless of if logged in or not
     // pass userId to postlist in case the user creates a new post
 }
