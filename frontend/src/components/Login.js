@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-function Login({ handleLogin }) {
-    const [username, setemail] = useState('');
+function Login({ handleLogin, setShowLogin }) {
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = async () => {
@@ -17,6 +17,7 @@ function Login({ handleLogin }) {
         // user input 1: placeholder text = email
         // user input 2: placeholder text = password
         // submit event: button that says 'login'
+        // button that says 'cancel' - onClick={() => setShowLogin(false)}
     );
 }
 
