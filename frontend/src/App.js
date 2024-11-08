@@ -6,19 +6,19 @@ import Login from "./components/Login";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  const [userId, setUserId] = useState('');
+  const [userName, setuserName] = useState('');
 
-  const handleLogin = (username, password) => {
+  const handleLogin = (email, password) => {
      // call backend 
      // if backend returns true, setIsAuthenticated to true and setShowLogin false
-     // get userId from backend response
-     // set isAuthenticated and userId in session storage
+     // get userName from backend response
+     // set isAuthenticated and userName in session storage
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('userName');
     sessionStorage.removeItem('isAuthenticated');
-    setUserId('');
+    setuserName('');
     setIsAuthenticated(false);
   };
 
@@ -29,13 +29,13 @@ function App() {
 
   useEffect(() => {
     // Handle user session persistence
-    const userId = sessionStorage.getItem('userId');
+    const userName = sessionStorage.getItem('userName');
     const isAuthenticated = sessionStorage.getItem('isAuthenticated');
-    if (userId && isAuthenticated) { 
-        setUserId(userId);
+    if (userName && isAuthenticated) { 
+        setuserName(userName);
         setIsAuthenticated(isAuthenticated);
     }
-  }, [userId, isAuthenticated]);
+  }, [userName, isAuthenticated]);
 
   useEffect(() => {
     // Handle sesson persistence for showing login page
@@ -78,7 +78,7 @@ function App() {
     </Container>
   );
     // render postlist because posts show regardless of if logged in or not
-    // pass userId to postlist in case the user creates a new post
+    // pass userName to postlist in case the user creates a new post
 }
 
 export default App;
