@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Post from '/Post';
 
-const PostList = ( {userId} ) => {
+const PostList = ( {userId, isAuthenticated} ) => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
-  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [newPostContent, setNewPostContent] = useState('');
 
   useEffect(() => {
     fetchPosts();
@@ -20,11 +20,8 @@ const PostList = ( {userId} ) => {
   };
 
 //   return (
+// input field and button to create post at the top shows if isAuthenticated = true
   // a list of posts where each post is a Post component; pass in the info from fetchPosts
-
-  // create new post button - when clicked, showCreatePost true
-  // pass onPostCreated to CreatePost
-  // pass userId to CreatePost
 //   );
 };
 
