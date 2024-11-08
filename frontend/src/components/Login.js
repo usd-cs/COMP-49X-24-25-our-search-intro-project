@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Login({ handleLogin }) {
+function Login({ handleLogin, setShowLogin }) {
     const [username, setemail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -17,6 +17,7 @@ function Login({ handleLogin }) {
         // user input 1: placeholder text = email
         // user input 2: placeholder text = password
         // submit event: button that says 'login'
+        // button that says 'cancel' - onClick={() => setShowLogin(false)}
     );
 }
 
