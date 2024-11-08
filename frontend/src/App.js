@@ -1,25 +1,36 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from "react";
 import './App.css';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [userId, setUserId] = useState('');
+
+  const handleLogin = (username, password) => {
+     // call backend 
+     // if backend returns true, setIsAuthenticated to true and setShowLogin false
+     // get userId from backend response
+     // set isAuthenticated and userId in session storage
+  };
+
+  const handleLogout = () => {
+    // remove isAuthenticated and userId from session storage
+  };
+
+  useEffect(() => {
+    // Handle user session persistence on page reload
+    // check if session storage has isAuthenticated and userId -- if so, set them
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  <h1>test</h1>
   );
+  // login button - showlogin true if login button is clicked
+    // handleLogin gets passed to Login component
+    // logout button - isAuthenticated false if logout button is clicked
+
+    // render postlist because posts show regardless of if logged in or not
+    // pass userId to postlist in case the user creates a new post
 }
 
 export default App;
