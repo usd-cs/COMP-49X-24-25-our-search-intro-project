@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 function Login({ handleLogin, setShowLogin }) {
-    const [username, setemail] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = async () => {
