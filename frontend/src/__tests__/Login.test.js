@@ -85,4 +85,50 @@ describe('Login functionality', () => {
             expect(logoutBtn).toBeInTheDocument();
         });   
     });
+
+    test("sets isAuthenticated back to false if logout button is clicked", async () => {
+        render(<App />); 
+        window.setTestState({ 
+            isAuthenticated: true, 
+            showLogin: false, 
+            userName: 'testUser' 
+        });
+
+        await waitFor(() => { 
+            const logoutBtn = screen.getByRole('button', { name: /logout/i }); 
+            expect(logoutBtn).toBeInTheDocument(); 
+        }); 
+
+        fireEvent.click(screen.getByRole('button', { name: /logout/i })); 
+
+        // Check that isAuthenticated is false because the login button is shown again
+        await waitFor(() => { 
+            expect(screen.getByText(/login/i)).toBeInTheDocument(); 
+        });
+    }); 
+
+    test('on invalid credentials, displays error message (Failed login keeps isAuthenticated false)', async () => {
+        fetch.mockResolvedValue({
+            ok: false, 
+            status: 401, 
+            json: async () => ({ message: 'Invalid credentials' }),
+        });
+    
+        const mockHandleLogin = jest.fn(async () => {
+            return { isValid: false, userName: '' }; // Simulate failed login
+        });
+        render(<Login handleLogin={mockHandleLogin} setShowLogin={() => {}} />);
+    
+        const form = screen.getByTestId('login-form');
+        const emailInput = screen.getByLabelText(/email/i);
+        const passwordInput = screen.getByLabelText(/password/i);
+    
+        fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+        fireEvent.change(passwordInput, { target: { value: 'password123' } });
+        fireEvent.submit(form);
+    
+        await screen.findByText(/invalid credentials/i); 
+    
+        expect(screen.getByText(/invalid credentials/i)).toBeInTheDocument();
+    });
 });
