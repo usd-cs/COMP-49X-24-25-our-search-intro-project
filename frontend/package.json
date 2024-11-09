@@ -45,6 +45,13 @@
       "global": {
         "lines": 80
       }
-    }
+    },
+    "transform": { "^.+\\.jsx?$": "babel-jest" }, 
+    "moduleNameMapper": { "\\.(css|less|scss)$": "identity-obj-proxy" }
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "babel-jest": "^29.7.0"
   }
 }
