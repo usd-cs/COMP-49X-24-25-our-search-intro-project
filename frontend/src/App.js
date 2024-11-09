@@ -6,7 +6,7 @@ import Login from "./components/Login";
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
-    const [userName, setuserName] = useState('');
+    const [userName, setUserName] = useState('');
 
     const handleLogin = (email, password) => {
         // call backend 
@@ -18,7 +18,7 @@ function App() {
     const handleLogout = () => {
         sessionStorage.removeItem('userName');
         sessionStorage.removeItem('isAuthenticated');
-        setuserName('');
+        setUserName('');
         setIsAuthenticated(false);
     };
 
@@ -32,7 +32,7 @@ function App() {
         const userName = sessionStorage.getItem('userName');
         const isAuthenticated = sessionStorage.getItem('isAuthenticated');
         if (userName && isAuthenticated) {
-            setuserName(userName);
+            setUserName(userName);
             setIsAuthenticated(isAuthenticated);
         }
     }, [userName, isAuthenticated]);
@@ -44,6 +44,15 @@ function App() {
             setShowLogin(true);
         }
     }, [showLogin]);
+
+    // Method for test purposes to set isAuthenticated directly 
+    if (process.env.NODE_ENV === 'test') { 
+        window.setTestState = (newState) => { 
+            setIsAuthenticated(newState.isAuthenticated); 
+            setShowLogin(newState.showLogin); 
+            setUserName(newState.userName); 
+        }; 
+    }
 
     const renderLogin = () => {
         if (showLogin) {

@@ -3,83 +3,123 @@ import axios from 'axios';
 import Login from '../components/Login';
 import App from '../App';
 
+jest.mock('axios');
+
 test("Login UI renders correctly", () => {
-    render(<Login/>);
-    const element = screen.getByText(/Login/);  
-    expect(element).toBeInTheDocument();
+    const fakeProps = { 
+        handleLogin: jest.fn(), 
+        setShowLogin: jest.fn() 
+    };
+    render(<Login {...fakeProps} />);
+
+    const title = screen.getByText(/Login/);  
+    const form = screen.getByRole('form');
+    const backBtn = screen.getByRole('button', {name: /back/i});
+    const loginBtn = screen.getByRole('button', {name: /login/i});
+
+    expect(title).toBeInTheDocument();
+    expect(form).toBeInTheDocument();
+    expect(backBtn).toBeInTheDocument();
+    expect(loginBtn).toBeInTheDocument();
 });
 
-describe('Authentication functionality', () => {
+describe('Login functionality', () => {
 
-    test("Successful login sends email and password to the server and sets isAuthenticated to true", async () => {
-        render(<App />);  // Login component is a child component of app, so we only need to render App
-        expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();  // Check that login button is visible because no one is logged in yet
+    test("displays the login form if login button is clicked", () => {
+        render(<App />);  
+        const showLoginBtn = screen.getByText(/login/i); 
+        expect(showLoginBtn).toBeInTheDocument();  // Check that login button is visible because no one is logged in yet
+        
+        fireEvent.click(showLoginBtn);
 
-        axios.post.mockResolvedValueOnce({ status: 200, data: { token: 'fake-token' } });  // mocks retrieving valid credentials 
-    
-        const emailInput = screen.getByPlaceholderText(/email/i); 
-        const passwordInput = screen.getByPlaceholderText(/password/i);
-        const loginButton = screen.getByRole('button', { name: /login/i });
-    
-        fireEvent.change(emailInput, { target: { value: 'testuser' } });  // mocks the login form data being changed by user
-        fireEvent.change(passwordInput, { target: { value: 'password123' } });
-        fireEvent.click(loginButton);
+        const loginTitle = screen.getByText(/Login/);  
+        expect(loginTitle).toBeInTheDocument();
+    }); 
 
-        // Check that isAuthenticated is now true by observing logout button is now visible and login button is no longer visible
-        await waitFor(() => {
-            const logoutButton = screen.getByRole('button', { name: /logout/i });
-            expect(logoutButton).toBeInTheDocument();
-        });      
-        expect(screen.queryByRole('button', { name: /login/i })).not.toBeInTheDocument();
-    });
-    
-    test('Failed login keeps isAuthenticated false', async () => {
-        render(<App />);
-        expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
-
-        axios.post.mockRejectedValueOnce(new Error('Invalid credentials'));
-    
-        const emailInput = screen.getByPlaceholderText(/email/i);
-        const passwordInput = screen.getByPlaceholderText(/password/i);
-        const loginButton = screen.getByRole('button', { name: /login/i });
-    
-        fireEvent.change(emailInput, { target: { value: 'testuser' } });
-        fireEvent.change(passwordInput, { target: { value: 'wrongpassword' } });
-        fireEvent.click(loginButton);
-    
-        // Check that isAuthenticated is still false because the login button is still in the document
-        await waitFor(() => {
-            const loginButtonAfterFailedLogin = screen.getByRole('button', { name: /login/i });
-            expect(loginButtonAfterFailedLogin).toBeInTheDocument();
-        });
-
-        const errorMsg = screen.getByText("Failed login. Please try again");
-        expect(errorMsg).toBeInTheDocument();
-    });
-
-    test('Logout button sets isAuthenticated back to false', async () =>  {
+    test("sets isAuthenticated back to false if logout button is clicked", async () => {
         render(<App />); 
+        window.setTestState({  // Directly set the state to simulate a logged-in user 
+            isAuthenticated: true, 
+            showLogin: false,
+            userName: 'testUser' 
+        }); 
+        await waitFor(() => { 
+            const logoutBtn = screen.getByRole('button', { name: /logout/i }); 
+            expect(logoutBtn).toBeInTheDocument(); 
+        }); 
 
-        axios.post.mockResolvedValueOnce({ status: 200, data: { token: 'fake-token' } });  // Mock a successful login response 
-        const emailInput = screen.getByPlaceholderText(/email/i); 
-        const passwordInput = screen.getByPlaceholderText(/password/i);
-        const loginButton = screen.getByRole('button', { name: /login/i });
-        fireEvent.change(emailInput, { target: { value: 'testuser' } });
-        fireEvent.change(passwordInput, { target: { value: 'password123' } });
-        fireEvent.click(loginButton);
+        fireEvent.click(screen.getByRole('button', { name: /logout/i })); 
 
-        // Check that logout button is now in the document because the user has logged in
-        await waitFor(() => {
-            const logoutButton = screen.getByRole('button', { name: /logout/i });
-            expect(logoutButton).toBeInTheDocument();
+        // Check that isAuthenticated is false because the login button is shown again
+        await waitFor(() => { 
+            expect(screen.getByText(/login/i)).toBeInTheDocument(); 
         });
+    }); 
 
-        // Check that the login button is displayed again after logout button is clicked
-        fireEvent.click(screen.getByRole('button', { name: /logout/i }));  // Simulate clicking the logout button
-        await waitFor(() => {
-            const loginButtonAfterLogout = screen.getByRole('button', { name: /login/i });
-            expect(loginButtonAfterLogout).toBeInTheDocument();
+    test("stops showing login form after clicking back on the login form", async () => {
+        render(<App />); 
+        window.setTestState({ 
+            isAuthenticated: false, 
+            showLogin: true, 
+            userName: '' 
+        }); 
+        await waitFor(() => { 
+            const backBtn = screen.getByRole('button', { name: /back/i }); 
+            expect(backBtn).toBeInTheDocument();
+        }); 
+
+        fireEvent.click(screen.getByRole('button', { name: /back/i })); 
+
+        // Check that isAuthenticated is false because the back button is gone
+        await waitFor(() => { 
+            expect(screen.queryByRole('button', { name: /back/i })).not.toBeInTheDocument();
         });
+    }); 
+
+    test("calls the backend with correct credentials after clicking login on the login form", () => {
+        render(<App />); 
+        fireEvent.click(screen.getByText(/login/i)); 
+        fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'test@example.com' } }); 
+        fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'password123' } }); 
+
+        const mockHandleLogin = jest.fn(); 
+        render(<Login handleLogin={mockHandleLogin} setShowLogin={() => {}} />);
+        fireEvent.click(screen.getByText(/login/i)); 
+        
+        // Check if handleLogin was called with the correct credentials 
+        expect(mockHandleLogin).toHaveBeenCalledWith('test@example.com', 'password123');
+    }); 
+
+    test('on correct credentials, hides login form on success (isAuthenticated is set to true)', async () => {
+        axios.post.mockResolvedValue({ status: 200, data: { userName: 'testUser' } }); // Simulate a successful server response
+
+        render(<App />);
+        fireEvent.click(screen.getByText(/login/i));
+        fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'test@example.com' } });
+        fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'password123' } });
+        fireEvent.click(screen.getByText(/login/i));
+
+        // Check that isAuthenticated is now true by observing logout button is now visible
+        await waitFor(() => {
+            const logoutBtn = screen.getByRole('button', { name: /logout/i });
+            expect(logoutBtn).toBeInTheDocument();
+        });   
     });
 
+    test('on invalid credentials, displays error message (Failed login keeps isAuthenticated false)', async () => {
+        axios.post.mockRejectedValue({ response: { status: 401 } }); // Simulate Unauthorized response
+
+        render(<App />);
+        fireEvent.click(screen.getByText(/login/i));
+        fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'test@example.com' } });
+        fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'wrongpassword' } });
+        fireEvent.click(screen.getByText(/login/i));
+
+        await screen.findByText(/invalid credentials/i);
+
+        // Check if the error message is displayed and the login form is still visible
+        expect(screen.getByText(/invalid credentials/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+    });
 });
