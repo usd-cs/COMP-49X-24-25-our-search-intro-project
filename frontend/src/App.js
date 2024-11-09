@@ -13,6 +13,7 @@ function App() {
         // if backend returns true, setIsAuthenticated to true and setShowLogin false
         // get userName from backend response
         // set isAuthenticated and userName in session storage
+        return { isValid: false, userName: '' };
     };
 
     const handleLogout = () => {
@@ -57,7 +58,7 @@ function App() {
     const renderLogin = () => {
         if (showLogin) {
             return (
-                <Login onLogin={handleLogin} setShowLogin={setShowLogin} />
+                <Login handleLogin={handleLogin} setShowLogin={setShowLogin} />
             );
         } else {
             return renderButtons();

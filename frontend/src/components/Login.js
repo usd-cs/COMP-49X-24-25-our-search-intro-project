@@ -3,11 +3,22 @@ import React, { useState } from "react";
 function Login({ handleLogin, setShowLogin }) {
     const [email, setEmail] = useState(''); 
     const [password, setPassword] = useState('');
+    const [error, setError] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         // calls the prop handleLogin with email and password
+        // use fetch
         e.preventDefault(); 
-        handleLogin(email, password);
+        const res = await handleLogin(email, password);
+        if (res) {
+            if (res.isValid) {
+                setError(false)
+                setShowLogin(false);
+            } else {
+                setError(true);
+                setShowLogin(true);
+            }
+        }
     };
 
     const handleBack = () => {
@@ -15,10 +26,17 @@ function Login({ handleLogin, setShowLogin }) {
         setShowLogin(false);
     };
 
+    const errorMsg = () => {
+        if (error === true) {
+            return <h5>Invalid credentials</h5>
+        }
+    }
+
     return (
         <>
         <h2>Login</h2>
-        <form onSubmit={handleSubmit}>
+        {errorMsg()}
+        <form data-testid="login-form" onSubmit={handleSubmit}>
             <label htmlFor="email">Email:</label> 
             <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)}/> 
             <label htmlFor="password">Password:</label> 
