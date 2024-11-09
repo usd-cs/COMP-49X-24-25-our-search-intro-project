@@ -46,10 +46,16 @@
         "lines": 80
       }
     },
-    "transform": { "^.+\\.jsx?$": "babel-jest" }, 
-    "moduleNameMapper": { "\\.(css|less|scss)$": "identity-obj-proxy" }
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "moduleNameMapper": {
+      "\\.(css|less|scss)$": "identity-obj-proxy"
+    }
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-transform-private-property-in-object": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.25.9",
     "babel-jest": "^29.7.0"

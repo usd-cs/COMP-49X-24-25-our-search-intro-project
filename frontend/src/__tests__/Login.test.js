@@ -1,8 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import axios from 'axios';
 import Login from '../components/Login';
 import App from '../App';
-
+const axios = require('axios');
 jest.mock('axios');
 
 test("Login UI renders correctly", () => {
