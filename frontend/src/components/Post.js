@@ -5,7 +5,7 @@ const Post = ({ postData }) => {
     const { userName, content } = postData;
 
   return (
-    <Card sx={{ maxWidth: 600, margin: 'auto', mb: 2 }}>
+    <Card variant="outlined" sx={{ width: 400, height: 200, margin: 'auto', mb: 2, backgroundColor: '#bbdefb' }}>
       <CardHeader
         subheader={userName}
       />
@@ -14,10 +14,6 @@ const Post = ({ postData }) => {
           {content}
         </Typography>
       </CardContent>
-
-      {/* <CardActions disableSpacing>
-        
-      </CardActions> */}
     </Card>
   );
 };
