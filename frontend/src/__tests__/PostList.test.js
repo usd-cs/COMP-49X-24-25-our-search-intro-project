@@ -42,7 +42,7 @@ describe('PostList', () => {
     render(<PostList userName={userName} isAuthenticated={true}/>);
 
     await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith('backend/posts', expect.objectContaining({
+        expect(global.fetch).toHaveBeenCalledWith('http://localhost:8080/posts', expect.objectContaining({
             method: 'GET',  // Make sure the method is GET
             headers: { 'Content-Type': 'application/json' },  // Ensure the headers are correct
         }));

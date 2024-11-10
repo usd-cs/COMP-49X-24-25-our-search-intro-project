@@ -14,7 +14,7 @@ const PostList = ({ userName, isAuthenticated }) => {
     const fetchPosts = async () => {
         // Fetch all posts from the backend
         try {
-            const response = await fetch('backend/posts', {
+            const response = await fetch('http://localhost:8080/posts', {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ const PostList = ({ userName, isAuthenticated }) => {
 
     const createPost = async (newPostContent) => {
         try {
-            const response = await fetch('/create/post', {
+            const response = await fetch('http://localhost:8080/create/post', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
