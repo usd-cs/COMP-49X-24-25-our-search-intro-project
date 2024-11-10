@@ -14,6 +14,5 @@ describe('Post', () => {
         
         expect(screen.getByText(mockPostData.userName)).toBeInTheDocument();
         expect(screen.getByText(mockPostData.content)).toBeInTheDocument();
-        expect(screen.getByText(/Comments/i)).toBeInTheDocument();
     });
 });

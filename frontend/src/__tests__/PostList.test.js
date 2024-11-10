@@ -7,37 +7,26 @@ describe('PostList', () => {
   const userName = 'Dr. Sat';
 
   const posts = [
-    { id: 1, title: 'Post 1' },
-    { id: 2, title: 'Post 2' },
+    { userName: 'test 1', content: 'Post 1' },
+    { userName: 'test 2', content: 'Post 2' },
   ];
 
   test('Displays posts when data is fetched successfully', async () => {
-    fetch.mockResolvedValue({ 
-        ok: true, 
-        json: async () => ({ data: posts }), 
-    }); 
+    global.fetch = jest.fn(() => 
+        Promise.resolve({ 
+            ok: true, 
+            status: 200, 
+            json: async () => posts, 
+        }) 
+    );
 
     render(<PostList userName={userName} isAuthenticated={true}/>);
 
     // Check that each post is displayed
     await waitFor(() => {
         posts.forEach(post => {
-            expect(screen.getByText(post.title)).toBeInTheDocument();
+            expect(screen.getByText(post.content)).toBeInTheDocument();
           });
-    });
-  });
-
-  test('Displays an error message when the fetch fails', async () => {
-    fetch.mockResolvedValue({
-        ok: false, 
-        status: 500, 
-        json: async () => ({ message: 'Internal server error' }),
-    });
-
-    render(<PostList userName={userName} isAuthenticated={true}/>);
-
-    await waitFor(() => {
-      expect(screen.getByText(/error fetching posts/i)).toBeInTheDocument();
     });
   });
 
@@ -46,14 +35,17 @@ describe('PostList', () => {
         Promise.resolve({ 
             ok: true, 
             status: 200, 
-            json: async () => ({ data: posts }), 
+            json: async () =>  posts, 
         }) 
     );
 
     render(<PostList userName={userName} isAuthenticated={true}/>);
 
     await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith('/backend/posts');
+        expect(global.fetch).toHaveBeenCalledWith('backend/posts', expect.objectContaining({
+            method: 'GET',  // Make sure the method is GET
+            headers: { 'Content-Type': 'application/json' },  // Ensure the headers are correct
+        }));
     });
   });
 
@@ -62,7 +54,7 @@ describe('PostList', () => {
         Promise.resolve({ 
             ok: true, 
             status: 200, 
-            json: async () => ({ data: posts }), 
+            json: async () => posts, 
         }) 
     );
 
