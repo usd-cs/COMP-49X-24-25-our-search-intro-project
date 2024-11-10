@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Typography, Box } from "@mui/material";
-import axios from 'axios';
-import Post from '/Post';
+// import Post from '/Post';
 
 const PostList = ( {userName, isAuthenticated} ) => {
   const [posts, setPosts] = useState([]);

@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import axios from 'axios';
 import PostList from '../components/PostList';
+import React from "react";
 
 describe('PostList', () => {
 
@@ -12,7 +12,10 @@ describe('PostList', () => {
   ];
 
   test('Displays posts when data is fetched successfully', async () => {
-    axios.get.mockResolvedValueOnce({ data: posts });
+    fetch.mockResolvedValue({ 
+        ok: true, 
+        json: async () => ({ data: posts }), 
+    }); 
 
     render(<PostList userName={userName} isAuthenticated={true}/>);
 
@@ -25,7 +28,11 @@ describe('PostList', () => {
   });
 
   test('Displays an error message when the fetch fails', async () => {
-    axios.get.mockRejectedValueOnce(new Error('Error fetching posts'));
+    fetch.mockResolvedValue({
+        ok: false, 
+        status: 500, 
+        json: async () => ({ message: 'Internal server error' }),
+    });
 
     render(<PostList userName={userName} isAuthenticated={true}/>);
 
@@ -35,17 +42,29 @@ describe('PostList', () => {
   });
 
   test('Calls the correct API endpoint', async () => {
-    axios.get.mockResolvedValueOnce({ data: posts });
+    global.fetch = jest.fn(() => 
+        Promise.resolve({ 
+            ok: true, 
+            status: 200, 
+            json: async () => ({ data: posts }), 
+        }) 
+    );
 
     render(<PostList userName={userName} isAuthenticated={true}/>);
 
     await waitFor(() => {
-      expect(axios.get).toHaveBeenCalledWith('/backend/posts');  //TODO ask augusto what the endpoint is 
+        expect(global.fetch).toHaveBeenCalledWith('/backend/posts');
     });
   });
 
   test('Renders the correct number of posts', async () => {
-    axios.get.mockResolvedValueOnce({ data: posts });
+    global.fetch = jest.fn(() => 
+        Promise.resolve({ 
+            ok: true, 
+            status: 200, 
+            json: async () => ({ data: posts }), 
+        }) 
+    );
 
     render(<PostList userName={userName} isAuthenticated={true}/>);
 

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import Post from '../components/Post';
+import React from "react";
 
 describe('Post', () => {
     test("Post UI renders correctly", () => {
