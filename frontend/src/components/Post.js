@@ -5,7 +5,7 @@ const Post = ({ postData }) => {
     const { userName, content } = postData;
 
   return (
-    <Card variant="outlined" sx={{ width: 400, height: 200, margin: 'auto', mb: 2, backgroundColor: '#bbdefb' }}>
+    <Card variant="outlined" sx={{ width: 600, height: 200, margin: 'auto', mb: 2, backgroundColor: '#bbdefb' }}>
       <CardHeader
         subheader={userName}
       />
