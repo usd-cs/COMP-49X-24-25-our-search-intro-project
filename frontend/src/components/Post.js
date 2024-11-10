@@ -1,12 +1,25 @@
-import { Button, Container, Typography, Box } from "@mui/material";
+import { Card, CardHeader, CardContent, Typography } from '@mui/material';
 
 const Post = ({ postData }) => {
 
-    const { userName, contents, comments } = postData;
+    const { userName, content } = postData;
 
-//   return (
-   // the contents of the post
-//   );
+  return (
+    <Card sx={{ maxWidth: 600, margin: 'auto', mb: 2 }}>
+      <CardHeader
+        subheader={userName}
+      />
+      <CardContent>
+        <Typography variant="body1">
+          {content}
+        </Typography>
+      </CardContent>
+
+      {/* <CardActions disableSpacing>
+        
+      </CardActions> */}
+    </Card>
+  );
 };
 
 export default Post;
