@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Container, Typography, Box } from "@mui/material";
 import './App.css';
 import Login from "./components/Login";
+import PostList from "./components/PostList";
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -72,7 +73,6 @@ function App() {
             buttonContent = (
                 <>
                     <Button variant="outlined" color="primary" onClick={handleLogout}>Logout</Button>
-                    <p>button to create post here</p>
                 </>
             );
         } else {
@@ -105,15 +105,11 @@ function App() {
 
                 {renderLogin()}
 
-                <Typography variant="body1" mt={2}>
-                    Insert posts here
-                </Typography>
+                <PostList userName={userName} isAuthenticated={isAuthenticated}></PostList>
             </Box>
         </Container>
 
     );
-    // render postlist because posts show regardless of if logged in or not
-    // pass userName to postlist in case the user creates a new post
 }
 
 export default App;

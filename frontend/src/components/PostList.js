@@ -1,28 +1,92 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Typography, Box } from "@mui/material";
-// import Post from '/Post';
+import Post from "./Post";
+import { Typography, Container, List, ListItem } from "@mui/material";
+import NewPost from './NewPost';
 
-const PostList = ( {userName, isAuthenticated} ) => {
-  const [posts, setPosts] = useState([]);
-  const [error, setError] = useState(null);
-  const [newPostContent, setNewPostContent] = useState('');
+const PostList = ({ userName, isAuthenticated }) => {
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+    const [posts, setPosts] = useState([]);
 
-  const fetchPosts = async () => {
-    // Fetch all posts from the backend
-  };
+    useEffect(() => {
+        fetchPosts();
+    }, []);
 
-  const onPostCreated = async (e) => {
-    // Refresh the posts by calling fetchPosts again
-  };
+    const fetchPosts = async () => {
+        // Fetch all posts from the backend
+        try {
+            const response = await fetch('backend/posts', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+            if (!response.ok) {
+              throw new Error('Failed to fetch posts');
+            }
+            const data = await response.json();
+            setPosts(data);
+            
+          } catch (error) {
+            console.error('Error fetching posts:', error);
+          }
+    };
 
-//   return (
-// input field and button to create post at the top shows if isAuthenticated = true
-  // a list of posts where each post is a Post component; pass in the info from fetchPosts
-//   );
+    const createPost = async (newPostContent) => {
+        try {
+            const response = await fetch('/create/post', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content: newPostContent })
+            });
+            if (!response.ok) {
+                throw new Error('Failed to create post');
+            }
+            const newPost = await response.json();
+            return newPost;
+        } catch (error) {
+            console.error('Error creating post:', error);
+        }
+    };
+
+    const onPostCreated = async (newPostContent) => {
+        await createPost(newPostContent);
+
+        // Refresh the posts by calling fetchPosts again
+        fetchPosts();
+    };
+
+    const renderCreateOption = (isAuthenticated) => {
+        if (isAuthenticated) {
+            return <NewPost userName={userName} onPostCreated={onPostCreated}></NewPost>
+        }
+    }
+
+    
+
+    return (
+        <Container maxWidth="md">
+            <Typography variant="h6" component="h2" gutterBottom>
+                Posts
+            </Typography>
+            {renderCreateOption(isAuthenticated)}
+            {posts.length > 0 ? (
+            <List>
+                {posts.map((post) => (
+                    <React.Fragment key={post.id}>
+                        <ListItem>
+                            <Post postData={post} />
+                        </ListItem>
+                    </React.Fragment>
+                ))}
+            </List>
+        ) : (
+            <Typography variant="body1">No posts available</Typography>  // Optional: display a message if no posts
+        )}
+        </Container>
+
+    );
 };
 
 export default PostList;
