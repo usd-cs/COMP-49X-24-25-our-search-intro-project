@@ -4,10 +4,6 @@ import { Card, CardHeader, CardContent, CardActions, TextField, Button } from "@
 const NewPost = ({ userName, onPostCreated }) => {
     const [newPostContent, setNewPostContent] = useState('');
 
-    const createPost = async (e) => {
-
-    };
-
     return (
         <Card sx={{ maxWidth: 600, margin: 'auto', mb: 2 }}>
             <CardHeader
@@ -28,7 +24,7 @@ const NewPost = ({ userName, onPostCreated }) => {
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={createPost}
+                    onClick={() => onPostCreated(newPostContent)}
                     disabled={!newPostContent.trim()} // Disable button if input is empty
                     fullWidth
                 >
