@@ -3,8 +3,7 @@ import Post from "./Post";
 import { Typography, Container, List, ListItem } from "@mui/material";
 import NewPost from './NewPost';
 
-const PostList = ({ userName, isAuthenticated }) => {
-
+const PostList = ({ userId, userName, isAuthenticated }) => {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
@@ -15,30 +14,30 @@ const PostList = ({ userName, isAuthenticated }) => {
         // Fetch all posts from the backend
         try {
             const response = await fetch('http://localhost:8080/posts', {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json'
-              }
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
             if (!response.ok) {
-              throw new Error('Failed to fetch posts');
+                throw new Error('Failed to fetch posts');
             }
             const data = await response.json();
             setPosts(data);
-            
-          } catch (error) {
+
+        } catch (error) {
             console.error('Error fetching posts:', error);
-          }
+        }
     };
 
-    const createPost = async (newPostContent) => {
+    const createPost = async (newPostContent, userId) => {
         try {
             const response = await fetch('http://localhost:8080/create/post', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ content: newPostContent })
+                body: JSON.stringify({ content: newPostContent, userId: userId })
             });
             if (!response.ok) {
                 throw new Error('Failed to create post');
@@ -50,8 +49,8 @@ const PostList = ({ userName, isAuthenticated }) => {
         }
     };
 
-    const onPostCreated = async (newPostContent) => {
-        await createPost(newPostContent);
+    const onPostCreated = async (newPostContent, userId) => {
+        await createPost(newPostContent, userId);
 
         // Refresh the posts by calling fetchPosts again
         fetchPosts();
@@ -59,11 +58,11 @@ const PostList = ({ userName, isAuthenticated }) => {
 
     const renderCreateOption = (isAuthenticated) => {
         if (isAuthenticated) {
-            return <NewPost userName={userName} onPostCreated={onPostCreated}></NewPost>
+            return <NewPost userId={userId} userName={userName} onPostCreated={onPostCreated}></NewPost>
         }
     }
 
-    
+
 
     return (
         <Container maxWidth="md">
@@ -72,18 +71,18 @@ const PostList = ({ userName, isAuthenticated }) => {
             </Typography>
             {renderCreateOption(isAuthenticated)}
             {posts.length > 0 ? (
-            <List>
-                {posts.map((post) => (
-                    <React.Fragment key={post.id}>
-                        <ListItem>
-                            <Post postData={post} />
-                        </ListItem>
-                    </React.Fragment>
-                ))}
-            </List>
-        ) : (
-            <Typography variant="body1">No posts available</Typography>  // Optional: display a message if no posts
-        )}
+                <List>
+                    {posts.map((post) => (
+                        <React.Fragment key={post.id}>
+                            <ListItem>
+                                <Post postData={post} />
+                            </ListItem>
+                        </React.Fragment>
+                    ))}
+                </List>
+            ) : (
+                <Typography variant="body1">No posts available</Typography>  // Optional: display a message if no posts
+            )}
         </Container>
 
     );
