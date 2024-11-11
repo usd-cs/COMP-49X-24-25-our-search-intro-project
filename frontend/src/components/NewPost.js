@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardHeader, CardContent, CardActions, TextField, Button } from "@mui/material";
 
-const NewPost = ({ userName, onPostCreated }) => {
+const NewPost = ({ userId, userName, onPostCreated }) => {
     const [newPostContent, setNewPostContent] = useState('');
 
     return (
@@ -24,7 +24,7 @@ const NewPost = ({ userName, onPostCreated }) => {
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => onPostCreated(newPostContent)}
+                    onClick={() => onPostCreated(newPostContent, userId)}
                     disabled={!newPostContent.trim()} // Disable button if input is empty
                     fullWidth
                 >
