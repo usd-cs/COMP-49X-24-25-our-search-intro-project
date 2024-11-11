@@ -5,10 +5,11 @@ import React from "react";
 describe('PostList', () => {
 
   const userName = 'Dr. Sat';
+  const userId = 5;
 
   const posts = [
-    { userName: 'test 1', content: 'Post 1' },
-    { userName: 'test 2', content: 'Post 2' },
+    { userId: 1, userName: 'test 1', content: 'Post 1', postId: 3 },
+    { userId: 2, userName: 'test 2', content: 'Post 2', postId: 4 },
   ];
 
   test('Displays posts when data is fetched successfully', async () => {
@@ -20,7 +21,7 @@ describe('PostList', () => {
         }) 
     );
 
-    render(<PostList userName={userName} isAuthenticated={true}/>);
+    render(<PostList userId={userId} userName={userName} isAuthenticated={true}/>);
 
     // Check that each post is displayed
     await waitFor(() => {
@@ -39,7 +40,7 @@ describe('PostList', () => {
         }) 
     );
 
-    render(<PostList userName={userName} isAuthenticated={true}/>);
+    render(<PostList userId={userId} userName={userName} isAuthenticated={true}/>);
 
     await waitFor(() => {
         expect(global.fetch).toHaveBeenCalledWith('http://localhost:8080/posts', expect.objectContaining({
@@ -58,7 +59,7 @@ describe('PostList', () => {
         }) 
     );
 
-    render(<PostList userName={userName} isAuthenticated={true}/>);
+    render(<PostList userId={userId} userName={userName} isAuthenticated={true}/>);
 
     await waitFor(() => {
       expect(screen.getAllByRole('listitem')).toHaveLength(posts.length);
