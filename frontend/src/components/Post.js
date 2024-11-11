@@ -1,11 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { Card, CardHeader, CardContent, Typography } from '@mui/material';
 
-const Post = ({ post }) => {
+const Post = ({ postData }) => {
 
-//   return (
-   // the contents of the post
-//   );
+    const { userId, userName, content, postId } = postData;
+
+  return (
+    <Card variant="outlined" sx={{ width: 600, height: 200, margin: 'auto', mb: 2, backgroundColor: '#bbdefb' }}>
+      <CardHeader
+        subheader={userName}
+      />
+      <CardContent>
+        <Typography variant="body1">
+          {content}
+        </Typography>
+      </CardContent>
+    </Card>
+  );
 };
 
 export default Post;

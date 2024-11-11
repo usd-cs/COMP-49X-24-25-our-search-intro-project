@@ -2,25 +2,29 @@ import React, { useState, useEffect } from "react";
 import { Button, Container, Typography, Box } from "@mui/material";
 import './App.css';
 import Login from "./components/Login";
+import PostList from "./components/PostList";
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [userName, setUserName] = useState('');
+    const [userId, setUserId] = useState(null);
 
     const handleLogin = (email, password) => {
         // call backend 
         // if backend returns true, setIsAuthenticated to true and setShowLogin false
         // get userName from backend response
         // set isAuthenticated and userName in session storage
-        return { isValid: false, userName: '' };
+        return { isValid: false, userName: '', userId: 0 };
     };
 
     const handleLogout = () => {
         sessionStorage.removeItem('userName');
         sessionStorage.removeItem('isAuthenticated');
+        sessionStorage.removeItem('userId');
         setUserName('');
         setIsAuthenticated(false);
+        setUserId(null)
     };
 
     const showLoginForm = () => {
@@ -32,11 +36,13 @@ function App() {
         // Handle user session persistence
         const userName = sessionStorage.getItem('userName');
         const isAuthenticated = sessionStorage.getItem('isAuthenticated');
-        if (userName && isAuthenticated) {
+        const userId = sessionStorage.getItem('userId');
+        if (userName && isAuthenticated && userId) {
             setUserName(userName);
             setIsAuthenticated(isAuthenticated);
+            setUserId(userId);
         }
-    }, [userName, isAuthenticated]);
+    }, [userName, isAuthenticated, userId]);
 
     useEffect(() => {
         // Handle sesson persistence for showing login page
@@ -52,6 +58,7 @@ function App() {
             setIsAuthenticated(newState.isAuthenticated); 
             setShowLogin(newState.showLogin); 
             setUserName(newState.userName); 
+            setUserId(newState.userId);
         }; 
     }
 
@@ -72,7 +79,6 @@ function App() {
             buttonContent = (
                 <>
                     <Button variant="outlined" color="primary" onClick={handleLogout}>Logout</Button>
-                    <p>button to create post here</p>
                 </>
             );
         } else {
@@ -105,15 +111,11 @@ function App() {
 
                 {renderLogin()}
 
-                <Typography variant="body1" mt={2}>
-                    Insert posts here
-                </Typography>
+                <PostList userId={userId} userName={userName} isAuthenticated={isAuthenticated}></PostList>
             </Box>
         </Container>
 
     );
-    // render postlist because posts show regardless of if logged in or not
-    // pass userName to postlist in case the user creates a new post
 }
 
 export default App;
