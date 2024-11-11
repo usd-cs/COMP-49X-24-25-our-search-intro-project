@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Login from '../components/Login';
 import App from '../App';
@@ -39,7 +39,8 @@ describe('Login functionality', () => {
         window.setTestState({ 
             isAuthenticated: false, 
             showLogin: true, 
-            userName: '' 
+            userName: '',
+            userId: null 
         }); 
         await waitFor(() => { 
             const backBtn = screen.getByRole('button', { name: /back/i }); 
@@ -76,7 +77,8 @@ describe('Login functionality', () => {
         window.setTestState({ 
             isAuthenticated: true, 
             showLogin: false, 
-            userName: 'test' 
+            userName: 'test',
+            userId: 47 
         }); 
 
         // Check that isAuthenticated is now true by observing logout button is now visible
@@ -91,7 +93,8 @@ describe('Login functionality', () => {
         window.setTestState({ 
             isAuthenticated: true, 
             showLogin: false, 
-            userName: 'testUser' 
+            userName: 'testUser',
+            userId: 47 
         });
 
         await waitFor(() => { 
@@ -115,7 +118,7 @@ describe('Login functionality', () => {
         });
     
         const mockHandleLogin = jest.fn(async () => {
-            return { isValid: false, userName: '' }; // Simulate failed login
+            return { isValid: false, userName: '', userId: null }; // Simulate failed login
         });
         render(<Login handleLogin={mockHandleLogin} setShowLogin={() => {}} />);
     
