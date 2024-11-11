@@ -2,7 +2,7 @@ import { Card, CardHeader, CardContent, Typography } from '@mui/material';
 
 const Post = ({ postData }) => {
 
-    const { userName, content } = postData;
+    const { userId, userName, content, postId } = postData;
 
   return (
     <Card variant="outlined" sx={{ width: 600, height: 200, margin: 'auto', mb: 2, backgroundColor: '#bbdefb' }}>
