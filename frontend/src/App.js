@@ -8,20 +8,23 @@ function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [userName, setUserName] = useState('');
+    const [userId, setUserId] = useState(null);
 
     const handleLogin = (email, password) => {
         // call backend 
         // if backend returns true, setIsAuthenticated to true and setShowLogin false
         // get userName from backend response
         // set isAuthenticated and userName in session storage
-        return { isValid: false, userName: '' };
+        return { isValid: false, userName: '', userId: 0 };
     };
 
     const handleLogout = () => {
         sessionStorage.removeItem('userName');
         sessionStorage.removeItem('isAuthenticated');
+        sessionStorage.removeItem('userId');
         setUserName('');
         setIsAuthenticated(false);
+        setUserId(null)
     };
 
     const showLoginForm = () => {
@@ -33,11 +36,13 @@ function App() {
         // Handle user session persistence
         const userName = sessionStorage.getItem('userName');
         const isAuthenticated = sessionStorage.getItem('isAuthenticated');
-        if (userName && isAuthenticated) {
+        const userId = sessionStorage.getItem('userId');
+        if (userName && isAuthenticated && userId) {
             setUserName(userName);
             setIsAuthenticated(isAuthenticated);
+            setUserId(userId);
         }
-    }, [userName, isAuthenticated]);
+    }, [userName, isAuthenticated, userId]);
 
     useEffect(() => {
         // Handle sesson persistence for showing login page
@@ -53,6 +58,7 @@ function App() {
             setIsAuthenticated(newState.isAuthenticated); 
             setShowLogin(newState.showLogin); 
             setUserName(newState.userName); 
+            setUserId(newState.userId);
         }; 
     }
 
@@ -105,7 +111,7 @@ function App() {
 
                 {renderLogin()}
 
-                <PostList userName={userName} isAuthenticated={isAuthenticated}></PostList>
+                <PostList userId={userId} userName={userName} isAuthenticated={isAuthenticated}></PostList>
             </Box>
         </Container>
 
