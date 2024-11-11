@@ -5,8 +5,9 @@ import NewPost from '../components/NewPost';
 describe('NewPost', () => {
     test("UI renders correctly", () => {
         const userName = 'test';
+        const userId = 47;
         const mockCreatePost = jest.fn();
-        render(<NewPost userName={userName} onPostCreated={mockCreatePost}/>);
+        render(<NewPost userId={userId} userName={userName} onPostCreated={mockCreatePost}/>);
         
         expect(screen.getByText(userName)).toBeInTheDocument();
 
@@ -19,8 +20,9 @@ describe('NewPost', () => {
 
     test("Create post button fires when clicked", () => {
         const userName = 'test';
+        const userId = 44;
         const mockCreatePost = jest.fn();
-        render(<NewPost userName={userName} onPostCreated={mockCreatePost}/>);
+        render(<NewPost userId={userId} userName={userName} onPostCreated={mockCreatePost}/>);
 
         // Simulate user typing in the text input to enable the button
         const textInput = screen.getByLabelText("Write your post...");
