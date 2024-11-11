@@ -5,6 +5,8 @@ import React from "react";
 describe('Post', () => {
     test("Post UI renders correctly", () => {
         const mockPostData = {
+            userId: 333,
+            postId: 444,
             userName: "Comp491 student",
             content: "This is a sample post content.",
             comments: ""  //TODO 
