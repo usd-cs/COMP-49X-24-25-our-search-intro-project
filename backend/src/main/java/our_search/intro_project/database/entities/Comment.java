@@ -1,4 +1,4 @@
-package our_search.intro_project.entities;
+package our_search.intro_project.database.entities;
 
 import jakarta.persistence.*;
 
@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private Integer id;
 
     @Column(nullable = false)
     private String contents;
@@ -21,12 +21,12 @@ public class Comment {
     private Post post;
 
     // Getters and Setters
-    public Long getCommentId() {
-        return commentId;
+    public Integer getCommentId() {
+        return id;
     }
 
-    public void setCommentId(Long commentId) {
-        this.commentId = commentId;
+    public void setCommentId(Integer commentId) {
+        this.id = commentId;
     }
 
     public String getContents() {
@@ -50,6 +50,16 @@ public class Comment {
     }
 
     public void setPost(Post post) {
+        this.post = post;
+    }
+
+
+    public Comment() {
+    }
+    
+    public Comment(String contents, User user, Post post) {
+        this.contents = contents;
+        this.user = user;
         this.post = post;
     }
 }

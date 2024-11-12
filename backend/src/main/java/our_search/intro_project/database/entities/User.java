@@ -1,4 +1,4 @@
-package our_search.intro_project.entities;
+package our_search.intro_project.database.entities;
 
 import jakarta.persistence.*;
 
@@ -7,27 +7,27 @@ import jakarta.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, length = 255)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String name;
 
     @Column(nullable = false)
     private Boolean admin;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String password;
 
     // Getters and Setters
-    public Long getUserId() {
-        return userId;
+    public Integer getUserId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserId(Integer userId) {
+        this.id = userId;
     }
 
     public String getEmail() {
@@ -61,4 +61,22 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public User() {
+
+    }
+
+    public User(String email, String name, Boolean admin, String password) {
+        this.email = email;
+        this.name = name;
+        this.admin = admin;
+        this.password = password;
+    }
+
+
+
+
+
 }
+
+

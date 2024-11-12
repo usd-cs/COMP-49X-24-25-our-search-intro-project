@@ -1,4 +1,4 @@
-package our_search.intro_project.entities;
+package our_search.intro_project.database.entities;
 
 import jakarta.persistence.*;
 
@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+    private Integer id;
 
     @Column(nullable = false)
     private String contents;
@@ -17,12 +17,12 @@ public class Post {
     private User user;
 
     // Getters and Setters
-    public Long getPostId() {
-        return postId;
+    public Integer getPostId() {
+        return id;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
+    public void setPostId(Integer postId) {
+        this.id = postId;
     }
 
     public String getContents() {
@@ -40,4 +40,13 @@ public class Post {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Post() {
+    }
+    
+    public Post(String contents, User user) {
+        this.contents = contents;
+        this.user = user;
+    }
+
 }
