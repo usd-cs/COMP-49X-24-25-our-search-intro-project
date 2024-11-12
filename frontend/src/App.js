@@ -11,11 +11,30 @@ function App() {
     const [userId, setUserId] = useState(null);
 
     const handleLogin = (email, password) => {
-        // call backend 
-        // if backend returns true, setIsAuthenticated to true and setShowLogin false
-        // get userName from backend response
-        // set isAuthenticated and userName in session storage
-        return { isValid: false, userName: '', userId: 0 };
+        try {
+            const response = fetch('http://localhost:8080/components/Login', {
+                method: 'LOGIN',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email, password: password})
+            });
+            if (!response.ok) {
+                throw new Error('Failed to login');
+            }
+            const loginResponse = response.json();
+            if (loginResponse.isValid) {
+                setIsAuthenticated(true);
+                setUserName(loginResponse.userName);
+                setUserId(loginResponse.userId);
+                setShowLogin(false);
+                sessionStorage.setItem('userName', loginResponse.userName);
+                sessionStorage.setItem('isAuthenticated', 'true');
+                sessionStorage.setItem('userId', loginResponse.userId);
+            }
+        } catch (error) {
+            console.error('Error logging in', error);
+        }
     };
 
     const handleLogout = () => {
@@ -72,6 +91,7 @@ function App() {
         }
     };
 
+
     const renderButtons = () => {
         let buttonContent;
 
@@ -88,6 +108,7 @@ function App() {
         }
 
         return (
+            <>
             <Box
                 sx={{
                     display: 'flex',
@@ -102,20 +123,20 @@ function App() {
                 </Typography>
                 {buttonContent}
             </Box>
+            <PostList userId={userId} userName={userName} isAuthenticated={isAuthenticated}></PostList>
+            </>
         );
+        
     }
 
     return (
         <Container maxWidth="lg">
             <Box textAlign="center" mt={5}>
-
                 {renderLogin()}
-
-                <PostList userId={userId} userName={userName} isAuthenticated={isAuthenticated}></PostList>
             </Box>
         </Container>
-
     );
+
 }
 
 export default App;
