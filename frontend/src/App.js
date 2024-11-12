@@ -10,10 +10,10 @@ function App() {
     const [userName, setUserName] = useState('');
     const [userId, setUserId] = useState(null);
 
-    const handleLogin = (email, password) => {
+    const handleLogin = async(email, password) => {
         try {
-            const response = fetch('http://localhost:8080/components/Login', {
-                method: 'LOGIN',
+            const response = await fetch('http://localhost:8080/login', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -22,7 +22,7 @@ function App() {
             if (!response.ok) {
                 throw new Error('Failed to login');
             }
-            const loginResponse = response.json();
+            const loginResponse = await response.json();
             if (loginResponse.isValid) {
                 setIsAuthenticated(true);
                 setUserName(loginResponse.userName);
