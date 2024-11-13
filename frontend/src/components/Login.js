@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextField, styled} from "@mui/material";
+import { Button, TextField, styled, Typography} from "@mui/material";
 import MuiCard from '@mui/material/Card';
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -49,12 +49,15 @@ function Login({ handleLogin, setShowLogin }) {
 
     const errorMsg = () => {
         if (error === true) {
-            return <h5>Invalid credentials</h5>
+            return <Typography variant="body1" >Invalid credentials</Typography>
         }
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <>
+        <Typography variant="h4" component="h1">Login</Typography>
+        {errorMsg()}
+        <form onSubmit={handleSubmit} data-testid="login-form">
             {error && <h5>{error}</h5>}
             <Card variant="outlined">
                 <label htmlFor="email">Email</label>
@@ -91,7 +94,9 @@ function Login({ handleLogin, setShowLogin }) {
                 <Button variant="outlined" onClick={handleBack} style={{ position: 'absolute', top: '0', left: '0', margin: '10px' }}>Back</Button>
                 <Button type="submit" variant="contained" style={{ marginTop: '20px' }}>Login</Button>
             </Card>
-        </form>      
+        </form> 
+        </>
+             
         
         // inside form:
         // user input 1: placeholder text = email
