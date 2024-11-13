@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = LoginController.class)
 @ComponentScan(basePackages = "our_search.intro_project.login")
-@Import(LoginControllerTest.TestSecurityConfig.class)
+//@Import(LoginControllerTest.TestSecurityConfig.class)
 public class LoginControllerTest {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
@@ -39,18 +39,6 @@ public class LoginControllerTest {
   private MockMvc mockMvc;
   @MockBean
   private LoginService loginService;
-
-  @Configuration
-  static class TestSecurityConfig {
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-      http
-          .csrf(AbstractHttpConfigurer::disable)
-          .authorizeHttpRequests(auth -> auth
-              .anyRequest().permitAll());
-      return http.build();
-    }
-  }
 
   @Test
   void testLogin_validCredentials_returnsOk() throws Exception {
