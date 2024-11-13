@@ -21,6 +21,17 @@ public class User {
     @Column(nullable = false, length = 255)
     private String password;
 
+    public User() {
+
+    }
+
+    public User(String email, String name, Boolean admin, String password) {
+        this.email = email;
+        this.name = name;
+        this.admin = admin;
+        this.password = password;
+    }
+
     // Getters and Setters
     public Integer getUserId() {
         return id;
@@ -61,20 +72,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public User() {
-
-    }
-
-    public User(String email, String name, Boolean admin, String password) {
-        this.email = email;
-        this.name = name;
-        this.admin = admin;
-        this.password = password;
-    }
-
-
-
 
 
 }

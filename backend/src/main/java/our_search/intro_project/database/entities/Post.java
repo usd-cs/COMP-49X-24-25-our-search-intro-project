@@ -16,6 +16,14 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    public Post() {
+    }
+    
+    public Post(String contents, User user) {
+        this.contents = contents;
+        this.user = user;
+    }
+
     // Getters and Setters
     public Integer getPostId() {
         return id;
@@ -38,14 +46,6 @@ public class Post {
     }
 
     public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Post() {
-    }
-    
-    public Post(String contents, User user) {
-        this.contents = contents;
         this.user = user;
     }
 

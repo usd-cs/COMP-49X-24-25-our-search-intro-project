@@ -20,6 +20,15 @@ public class Comment {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
+    public Comment() {
+    }
+    
+    public Comment(String contents, User user, Post post) {
+        this.contents = contents;
+        this.user = user;
+        this.post = post;
+    }
+
     // Getters and Setters
     public Integer getCommentId() {
         return id;
@@ -50,16 +59,6 @@ public class Comment {
     }
 
     public void setPost(Post post) {
-        this.post = post;
-    }
-
-
-    public Comment() {
-    }
-    
-    public Comment(String contents, User user, Post post) {
-        this.contents = contents;
-        this.user = user;
         this.post = post;
     }
 }
