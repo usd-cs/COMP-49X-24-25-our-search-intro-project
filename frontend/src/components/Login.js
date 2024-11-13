@@ -1,5 +1,25 @@
 import React, { useState } from "react";
-import { Button, Container, Typography, Box } from "@mui/material";
+import { Button, Container, Typography, Box, TextField, styled} from "@mui/material";
+import MuiCard from '@mui/material/Card';
+
+const Card = styled(MuiCard)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignSelf: 'center',
+    width: '100%',
+    padding: theme.spacing(4),
+    gap: theme.spacing(2),
+    margin: 'auto',
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: '450px',
+    },
+    boxShadow:
+      'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
+    ...theme.applyStyles('dark', {
+      boxShadow:
+        'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
+    }),
+  }));
 
 function Login({ handleLogin, setShowLogin }) {
     const [email, setEmail] = useState(''); 
@@ -34,19 +54,45 @@ function Login({ handleLogin, setShowLogin }) {
     }
 
     return (
-        <>
-        <h2>Login</h2>
-        {errorMsg()}
-        <form data-testid="login-form" onSubmit={handleSubmit}>
-            <label htmlFor="email">Email:</label> 
-            <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)}/> 
-            <label htmlFor="password">Password:</label> 
-            <input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} /> 
-            <button type="button" onClick={handleBack}>Back</button> 
-            <button type="submit">Login</button>
-        </form>
-        </>
-
+        <form onSubmit={handleSubmit}>
+            {error && <h5>{error}</h5>}
+            <Card variant="outlined">
+                <label htmlFor="email">Email</label>
+                <TextField
+                    error={!!error}
+                    helperText={error}
+                    name="email"
+                    placeholder="Enter your email"
+                    type="email"
+                    id="email"
+                    autoComplete="email"
+                    autoFocus
+                    required
+                    variant="outlined"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    color={error ? "error" : "primary"}
+                />
+                <label htmlFor="password">Password</label>
+                <TextField
+                    error={!!error}
+                    helperText={error}
+                    name="password"
+                    placeholder="Enter your password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    required
+                    variant="outlined"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    color={error ? "error" : "primary"}
+                />
+                <Button variant="outlined" onClick={handleBack} style={{ position: 'absolute', top: '0', left: '0', margin: '10px' }}>Back</Button>
+                <Button type="submit" variant="contained" style={{ marginTop: '20px' }}>Login</Button>
+            </Card>
+        </form>      
+        
         // inside form:
         // user input 1: placeholder text = email
         // user input 2: placeholder text = password
