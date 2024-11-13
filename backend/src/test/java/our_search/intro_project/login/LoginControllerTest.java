@@ -31,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = LoginController.class)
 @ComponentScan(basePackages = "our_search.intro_project.login")
-//@Import(LoginControllerTest.TestSecurityConfig.class)
 public class LoginControllerTest {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
