@@ -11,7 +11,7 @@ import our_search.intro_project.login.service.LoginService;
 
 @RestController
 @RequestMapping("/login")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class LoginController {
   private final LoginService loginService;
 
