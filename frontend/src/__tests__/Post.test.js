@@ -9,6 +9,7 @@ describe('Post', () => {
             postId: 444,
             userName: "Comp491 student",
             content: "This is a sample post content.",
+            createdAt: "2023-11-12T10:30:45.123Z",
             comments: ""  //TODO 
         };
 
@@ -16,5 +17,14 @@ describe('Post', () => {
         
         expect(screen.getByText(mockPostData.userName)).toBeInTheDocument();
         expect(screen.getByText(mockPostData.content)).toBeInTheDocument();
+
+        const formattedDate = new Date(mockPostData.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+        });
+        expect(screen.getByText(`Posted on ${formattedDate}`)).toBeInTheDocument();
     });
 });

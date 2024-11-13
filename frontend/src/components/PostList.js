@@ -7,7 +7,12 @@ const PostList = ({ userId, userName, isAuthenticated }) => {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        fetchPosts();
+        //fetchPosts();
+        const fakePosts = [
+            { userId: 1, userName: 'dtrump', content: 'I am the president of the united states', postId: 3, createdAt: "2024-11-12T10:30:45.123Z" },
+            { userId: 2, userName: 'biden', content: 'I am the former president of america', postId: 4, createdAt:"2023-11-24T10:30:45.123Z" },
+        ]
+        setPosts(fakePosts)
     }, []);
 
     const fetchPosts = async () => {
