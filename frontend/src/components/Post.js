@@ -14,7 +14,7 @@ const Post = ({ postData }) => {
     });
 
   return (
-    <Card variant="outlined" sx={{ width: 600, height: 200, margin: 'auto', mb: 2, backgroundColor: '#bbdefb' }}>
+    <Card variant="outlined" sx={{ width: 600, margin: 'auto', mb: 2, backgroundColor: '#bbdefb' }}>
       <CardHeader
         subheader={userName}
         titleTypographyProps={{ fontWeight: 'bold' }}
