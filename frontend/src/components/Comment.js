@@ -1,15 +1,10 @@
-import React, { useState } from "react";
-import { Button, Container, Typography, Box, TextField, Paper, Avatar, Stack} from "@mui/material";
-import MuiCard from '@mui/material/Card';
-import { styled } from '@mui/material/styles';
+import React from "react";
+import { Typography, Box, Paper, Avatar, Stack} from "@mui/material";
+import { styled } from '@mui/material/styles'
+import DeleteCommentOrPosts from "./DeleteCommentOrPosts";
 
-const Comment = ({ commentData }) => {
+const Comment = ({ commentData, isAdmin, onCommentDeleted, userId }) => {
     const { userName, content, createdAt, commentId} = commentData;   
-
-    const [clicked, setClicked] = useState(false);
-    const [commentText, setCommentText] = useState(content);
-    const [openModal, setOpenModal] = useState(false);
-
 
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: '#fff',
@@ -18,9 +13,6 @@ const Comment = ({ commentData }) => {
         textAlign: 'center',
         color: theme.palette.text.secondary,
         maxWidth: 400,
-        ...theme.applyStyles('dark', {
-          backgroundColor: '#1A2027',
-        }),
       }));
       
       const formattedDate = new Date(createdAt).toLocaleDateString('en-US', {
@@ -49,6 +41,10 @@ const Comment = ({ commentData }) => {
             <Typography variant="body1">
                 {content}
             </Typography>
+            {isAdmin && (
+                <DeleteCommentOrPosts commentId={commentId} onDelete={() => onCommentDeleted(commentId, userId)}
+                />
+            )}
         </Item>
     </Box>
     );
