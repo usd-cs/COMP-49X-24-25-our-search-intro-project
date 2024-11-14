@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import our_search.intro_project.database.entities.Comment;
 import our_search.intro_project.database.repositories.CommentRepository;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -45,5 +46,9 @@ public class CommentService {
             return true;
         }
         return false;
+    }
+
+    public List<Comment> getCommentsByPostId(Integer postId) {
+        return commentRepository.findByPostId(postId);
     }
 }
