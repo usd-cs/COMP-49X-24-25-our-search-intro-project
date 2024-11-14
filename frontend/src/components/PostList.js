@@ -8,6 +8,11 @@ const PostList = ({ userId, userName, isAuthenticated }) => {
 
     useEffect(() => {
         fetchPosts();
+        const fakePosts = [
+            { userId: 1, userName: 'dtrump', content: 'I am the president of the united states', postId: 3, createdAt: "2024-11-12T10:30:45.123Z" },
+            { userId: 2, userName: 'kharris', content: 'I tried running for president of the united states of america this year, but sadly I lost to donald trump. yall should have voted', postId: 4, createdAt:"2024-11-24T10:30:45.123Z" }
+        ]
+        setPosts(fakePosts)
     }, []);
 
     const fetchPosts = async () => {

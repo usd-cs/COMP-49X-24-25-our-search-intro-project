@@ -8,8 +8,8 @@ describe('PostList', () => {
   const userId = 5;
 
   const posts = [
-    { userId: 1, userName: 'test 1', content: 'Post 1', postId: 3 },
-    { userId: 2, userName: 'test 2', content: 'Post 2', postId: 4 },
+    { userId: 1, userName: 'dtrump', content: 'I am the president of the united states', postId: 3, createdAt: "2024-11-12T10:30:45.123Z" },
+    { userId: 2, userName: 'kharris', content: 'I tried running for president of the united states of america this year, but sadly I lost to donald trump. yall should have voted', postId: 4, createdAt:"2024-11-24T10:30:45.123Z" }
   ];
 
   test('Displays posts when data is fetched successfully', async () => {
