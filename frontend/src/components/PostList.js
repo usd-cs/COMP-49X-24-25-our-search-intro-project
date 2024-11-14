@@ -8,11 +8,6 @@ const PostList = ({ userId, userName, isAuthenticated, isAdmin }) => {
 
     useEffect(() => {
         fetchPosts();
-        // const fakePosts = [
-        //     { userId: 1, userName: 'dtrump', content: 'I am the president of the united states', postId: 3, createdAt: "2024-11-12T10:30:45.123Z" },
-        //     { userId: 2, userName: 'kharris', content: 'I tried running for president of the united states of america this year, but sadly I lost to donald trump. yall should have voted', postId: 4, createdAt:"2024-11-24T10:30:45.123Z" }
-        // ]
-        // setPosts(fakePosts);
     }, []);
 
     const fetchPosts = async () => {
@@ -54,11 +49,16 @@ const PostList = ({ userId, userName, isAuthenticated, isAdmin }) => {
         }
     };
 
-    const deletePost = async (postId, userIdForThisPost) => {
+    const deletePost = async (postId, userId) => {
+        console.log('userId :>> ', userId);
+        console.log('postId :>> ', postId);
         try {
             const response = await fetch('http://localhost:8080/delete/post', {
                 method: 'DELETE',
-                body: JSON.stringify({ postId: postId, userId: userIdForThisPost})
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ postId: postId, userId: userId})
             });
             if (!response.ok) {
                 console.error('Failed to delete post');
@@ -97,7 +97,7 @@ const PostList = ({ userId, userName, isAuthenticated, isAdmin }) => {
             {posts.length > 0 ? (
                 <List>
                     {posts.map((post) => (
-                        <React.Fragment key={`post-${post.id}`}>
+                        <React.Fragment key={`post-${post.postId}`}>
                             <ListItem data-testid="post-item"> 
                                 <Post postData={post} userId={userId} currentUserName={userName} isAuthenticated={isAuthenticated} isAdmin={isAdmin} onPostDeleted={onPostDeleted} ></Post>
                             </ListItem>

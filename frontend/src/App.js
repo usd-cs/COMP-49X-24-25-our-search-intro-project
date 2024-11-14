@@ -28,13 +28,17 @@ function App() {
                 if (loginResponse.isAdmin) {
                     setIsAdmin(true);
                     sessionStorage.setItem('isAdmin', 'true');
+
+                    setUserId(Number(loginResponse.userId));
+                    sessionStorage.setItem('userId', Number(loginResponse.userId));
+                    console.log('userId :>> ', loginResponse.userId);
                 } else {
                     setIsAuthenticated(true);
                     setUserName(loginResponse.userName);
-                    setUserId(loginResponse.userId);
+                    setUserId(Number(loginResponse.userId));
                     sessionStorage.setItem('userName', loginResponse.userName);
                     sessionStorage.setItem('isAuthenticated', 'true');
-                    sessionStorage.setItem('userId', loginResponse.userId);
+                    sessionStorage.setItem('userId', Number(loginResponse.userId));
                 }
                 setShowLogin(false);
             }            
@@ -82,10 +86,11 @@ function App() {
 
         if (isAdminSession === 'true') {
             setIsAdmin(true);
+            setUserId(Number(userIdSession));
         } else if (userNameSession && isAuthenticatedSession === 'true' && userIdSession) {
             setUserName(userNameSession);
             setIsAuthenticated(true);
-            setUserId(userIdSession);
+            setUserId(Number(userIdSession));
         }
     }, [userName, isAuthenticated, userId, isAdmin]);
 

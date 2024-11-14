@@ -21,12 +21,18 @@ const Post = ({ postData, userId, currentUserName, isAuthenticated, isAdmin, onP
   };
 
 
-  const deleteComment = async (commentId, userIdForThisComment) => {
+  const deleteComment = async (commentId) => {
+    console.log('userId :>> ', userId);
+    console.log('commentId :>> ', commentId);
     try {
         const response = await fetch('http://localhost:8080/delete/comment', {
             method: 'DELETE',
-            body: JSON.stringify({ commentId: commentId, userId: userIdForThisComment })
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ commentId: commentId, userId: userId })
         });
+        console.log(response);
         if (!response.ok) {
             console.error('Failed to delete comment');
         }
@@ -35,8 +41,8 @@ const Post = ({ postData, userId, currentUserName, isAuthenticated, isAdmin, onP
     }
 };
 
-const onCommentDeleted = async (commentId, userIdForThisComment) => {
-    await deleteComment(commentId, userIdForThisComment);
+const onCommentDeleted = async (commentId, userId) => {
+    await deleteComment(commentId, userId);
 
     // Refresh the posts by calling fetchPosts again
     fetchComments(postId);
