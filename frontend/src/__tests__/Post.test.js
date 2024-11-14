@@ -9,8 +9,7 @@ describe('Post', () => {
             postId: 444,
             userName: "Comp491 student",
             content: "This is a sample post content.",
-            createdAt: "2023-11-12T10:30:45.123Z",
-            comments: ""  //TODO 
+            createdAt: "2023-11-12T10:30:45.123Z"
         };
 
         render(<Post postData={mockPostData} userName={"test username"} isAuthenticated={true}/>);
@@ -36,8 +35,7 @@ describe('Post', () => {
             postId: 444,
             userName: "Comp491 student",
             content: "This is a sample post content.",
-            createdAt: "2023-11-12T10:30:45.123Z",
-            comments: ""  //TODO 
+            createdAt: "2023-11-12T10:30:45.123Z"
         };
 
         render(<Post postData={mockPostData} userName={"test username"} isAuthenticated={false}/>);
