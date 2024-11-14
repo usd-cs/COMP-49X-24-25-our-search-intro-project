@@ -39,7 +39,7 @@ public class FetchControllerTest {
   }
 
   @Test
-  void testFetchAllPosts_returnsSortedResponse() throws Exception {
+  void testFetchAllPosts_existingPosts_returnsSortedResponse() throws Exception {
     User user = new User("test@test.com", "test", false, "password");
 
     LocalDateTime olderDate = LocalDateTime.of(2000, 1, 1, 1, 1);
