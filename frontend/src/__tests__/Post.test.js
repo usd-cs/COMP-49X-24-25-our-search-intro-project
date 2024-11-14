@@ -3,7 +3,7 @@ import Post from '../components/Post';
 import React from "react";
 
 describe('Post', () => {
-    test("Post UI renders correctly", () => {
+    test("Post UI renders correctly with create new comment option when authenticated", () => {
         const mockPostData = {
             userId: 333,
             postId: 444,
@@ -13,7 +13,7 @@ describe('Post', () => {
             comments: ""  //TODO 
         };
 
-        render(<Post postData={mockPostData}/>);
+        render(<Post postData={mockPostData} userName={"test username"} isAuthenticated={true}/>);
         
         expect(screen.getByText(mockPostData.userName)).toBeInTheDocument();
         expect(screen.getByText(mockPostData.content)).toBeInTheDocument();
@@ -26,5 +26,21 @@ describe('Post', () => {
             minute: 'numeric',
         });
         expect(screen.getByText(`Posted on ${formattedDate}`)).toBeInTheDocument();
+
+        expect(screen.getByText('Add Comment')).toBeInTheDocument();
+    });
+
+    test("Post UI does not show new comment option when not authenticated", () => {
+        const mockPostData = {
+            userId: 333,
+            postId: 444,
+            userName: "Comp491 student",
+            content: "This is a sample post content.",
+            createdAt: "2023-11-12T10:30:45.123Z",
+            comments: ""  //TODO 
+        };
+
+        render(<Post postData={mockPostData} userName={"test username"} isAuthenticated={false}/>);
+        expect(screen.queryByText('Add Comment')).not.toBeInTheDocument();
     });
 });
