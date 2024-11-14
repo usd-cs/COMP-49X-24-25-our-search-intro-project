@@ -80,7 +80,7 @@ const PostList = ({ userId, userName, isAuthenticated }) => {
                     {posts.map((post) => (
                         <React.Fragment key={post.id}>
                             <ListItem>
-                                <Post postData={post} postId={post.postId} userId={post.userId} currentUserName={userName}/>
+                                <Post postData={post} currentUserName={userName} isAuthenticated={isAuthenticated}/>
                             </ListItem>
                         </React.Fragment>
                     ))}

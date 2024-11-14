@@ -2,7 +2,7 @@ import { Card, CardHeader, CardContent, Typography } from '@mui/material';
 import NewComment from './NewComment';
 import React, {  useState } from 'react';
 
-const Post = ({ postData, postId, userId, currentUserName }) => {
+const Post = ({ postData, currentUserName, isAuthenticated }) => {
 
     const { userName, content, createdAt } = postData;
     const [comments, setComments] = useState([]);
@@ -68,12 +68,15 @@ const Post = ({ postData, postId, userId, currentUserName }) => {
             </List>
           )}
 
-          <NewComment
-              postId={postId}
-              userId={userId}
-              userName={currentUserName}
-              onCommentCreated={handleCommentCreated}
-          />
+
+          {isAuthenticated && (
+            <NewComment
+                postId={postData.postId}
+                userId={postData.userId}
+                userName={currentUserName}
+                onCommentCreated={handleCommentCreated}
+            />
+          )}
 
       </CardContent>
     </Card>
