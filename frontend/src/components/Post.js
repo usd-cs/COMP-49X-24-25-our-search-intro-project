@@ -2,8 +2,9 @@ import { Card, CardHeader, CardContent, Typography, List, ListItem } from '@mui/
 import NewComment from './NewComment';
 import React, { useEffect, useState } from 'react';
 import Comment from './Comment';
+import DeleteCommentOrPosts from './DeleteCommentOrPosts';
 
-const Post = ({ postData, currentUserName, isAuthenticated }) => {
+const Post = ({ postData, currentUserName, isAuthenticated, isAdmin, onPostDeleted }) => {
 
   const { postId, userName, content, createdAt } = postData;
   const [comments, setComments] = useState([]);
@@ -12,17 +13,39 @@ const Post = ({ postData, currentUserName, isAuthenticated }) => {
     if (postId) {
       fetchComments(postId);
     }
-    const fakeComments = [
-        { userId: 1, userName: 'Student 1', content: 'Hello', postId: 3, createdAt: "2024-11-12T10:30:45.123Z" },
-        { userId: 2, userName: 'Peter Park', content: 'Alo', postId: 3, createdAt:"2024-11-24T10:30:45.123Z" }
-    ]
-    setComments(fakeComments);
+    // const fakeComments = [
+    //     { userName: 'Student 1', content: 'Hello', createdAt: "2024-11-12T10:30:45.123Z" },
+    //     { userName: 'Peter Park', content: 'Alo', createdAt:"2024-11-24T10:30:45.123Z" }
+    // ]
+    // setComments(fakeComments);
 }, [postId]);
 
-  const handleCommentCreated = async (commentContent, userId, postId) => {
+  const onCommentCreated = async (commentContent, userId, postId) => {
     await createComment(commentContent, userId, postId);
     await fetchComments(postId);
   };
+
+
+  const deleteComment = async (commentId) => {
+    try {
+        const response = await fetch('http://localhost:8080/delete/comment', {
+            method: 'DELETE',
+            body: JSON.stringify({ commentId: commentId })
+        });
+        if (!response.ok) {
+            console.error('Failed to delete comment');
+        }
+    } catch (error) {
+        console.error('Error deleting comment', error);
+    }
+};
+
+const onCommentDeleted = async (commentId) => {
+    await deleteComment(commentId);
+
+    // Refresh the posts by calling fetchPosts again
+    fetchComments(postId);
+};
 
   const fetchComments = async (postId) => {
     try {
@@ -77,6 +100,14 @@ const Post = ({ postData, currentUserName, isAuthenticated }) => {
         subheader={userName}
         titleTypographyProps={{ fontWeight: 'bold' }}
         subheaderTypographyProps={{ color: 'text.secondary' }}
+        action={
+          isAdmin && (
+            <DeleteCommentOrPosts
+              postId={postData.postId}
+              onDelete={() => onPostDeleted(postId)}
+            />
+          )
+        }
       />
       <CardContent>
         <Typography variant="body1">
@@ -86,12 +117,13 @@ const Post = ({ postData, currentUserName, isAuthenticated }) => {
           Posted on {formattedDate}
         </Typography>
 
-        {comments.length > 0 && (
+        {comments.length > 0 && 
+        (
               <List>
                   {comments.map((comment) => (
                       <React.Fragment key={comment.id}>
                           <ListItem>
-                              <Comment commentData={comment}/>
+                              <Comment commentData={comment} isAdmin={isAdmin} onCommentDeleted={onCommentDeleted} />
                           </ListItem>
                       </React.Fragment>
                   ))}
@@ -104,10 +136,10 @@ const Post = ({ postData, currentUserName, isAuthenticated }) => {
             postId={postData.postId}
             userId={postData.userId}
             userName={currentUserName}
-            onCommentCreated={handleCommentCreated}
+            onCommentCreated={onCommentCreated}
           />
         )}
-
+        
       </CardContent>
     </Card>
   );
