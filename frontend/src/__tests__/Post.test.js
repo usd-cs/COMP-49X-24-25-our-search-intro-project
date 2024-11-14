@@ -12,6 +12,8 @@ describe('Post', () => {
         createdAt: "2023-11-12T10:30:45.123Z"
     };
 
+    const fakeUserId = 1;
+
     test("Post UI renders correctly with create new comment option when authenticated", () => {
         render(<Post postData={mockPostData} userName={"test username"} isAuthenticated={true}/>);
         
@@ -50,7 +52,7 @@ describe('Post', () => {
     test("Delete post button fires when clicked", () => {
         const mockOnPostDeleted = jest.fn();
     
-        render(<Post postData={mockPostData} userName={"test username"} isAuthenticated={false} isAdmin={true} onPostDeleted={mockOnPostDeleted}/>);
+        render(<Post postData={mockPostData} userId={fakeUserId} userName={"test username"} isAuthenticated={false} isAdmin={true} onPostDeleted={mockOnPostDeleted}/>);
     
         const deleteIcon = screen.getByTestId('DeleteOutlinedIcon');
         fireEvent.click(deleteIcon);
@@ -61,7 +63,7 @@ describe('Post', () => {
         fireEvent.click(deleteButton);
     
         expect(mockOnPostDeleted).toHaveBeenCalledTimes(1);
-        expect(mockOnPostDeleted).toHaveBeenCalledWith(mockPostData.postId);
+        expect(mockOnPostDeleted).toHaveBeenCalledWith(mockPostData.postId, fakeUserId);
     });
 
 

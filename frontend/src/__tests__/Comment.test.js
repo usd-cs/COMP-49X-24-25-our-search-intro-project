@@ -10,6 +10,8 @@ describe('Comment', () => {
         content: 'Hello, this is a test comment!',
         createdAt: "2024-11-12T10:30:45.123Z",
     };
+
+    const fakeUserId = 1;
     
     test('renders Comment component with correct data', () => {
     
@@ -19,7 +21,7 @@ describe('Comment', () => {
             day: 'numeric',
         });
     
-        render(<Comment commentData={fakeCommentData} isAdmin={true} onCommentDeleted={() => {}} />);
+        render(<Comment commentData={fakeCommentData} isAdmin={true} onCommentDeleted={() => {}} userId={fakeUserId}/>);
     
         expect(screen.getByText('Student 1')).toBeInTheDocument();
         expect(screen.getByText('Hello, this is a test comment!')).toBeInTheDocument();
@@ -63,6 +65,7 @@ describe('Comment', () => {
             commentData={fakeCommentData}
             isAdmin={true}
             onCommentDeleted={mockOnCommentDeleted}
+            userId={fakeUserId}
           />
         );
     
@@ -75,6 +78,6 @@ describe('Comment', () => {
         fireEvent.click(deleteButton);
     
         expect(mockOnCommentDeleted).toHaveBeenCalledTimes(1);
-        expect(mockOnCommentDeleted).toHaveBeenCalledWith(fakeCommentData.commentId);
+        expect(mockOnCommentDeleted).toHaveBeenCalledWith(fakeCommentData.commentId, fakeUserId);
       });
 });
