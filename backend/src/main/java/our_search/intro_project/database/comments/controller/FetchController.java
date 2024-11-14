@@ -9,7 +9,7 @@ import our_search.intro_project.database.services.CommentService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/comment")
 @CrossOrigin(origins = "http://localhost:3000")
 public class FetchController {
 

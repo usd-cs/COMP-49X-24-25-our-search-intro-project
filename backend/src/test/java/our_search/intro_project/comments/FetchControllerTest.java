@@ -48,8 +48,8 @@ public class FetchControllerTest {
         LocalDateTime olderDate = LocalDateTime.of(2000, 1, 1, 1, 1);
         LocalDateTime newerDate = LocalDateTime.of(2001, 1, 1, 1, 1);
 
-        FetchedComment comment1 = new FetchedComment(1, "Comment 1", "Test User", olderDate);
-        FetchedComment comment2 = new FetchedComment(2, "Comment 2", "Test User", newerDate);
+        FetchedComment comment1 = new FetchedComment(1, "Comment 1", "testUser", olderDate);
+        FetchedComment comment2 = new FetchedComment(2, "Comment 2", "testUser", newerDate);
 
         List<FetchedComment> expectedComments =
                 Arrays.asList(
