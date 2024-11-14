@@ -6,32 +6,38 @@ import PostList from "./components/PostList";
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [userName, setUserName] = useState('');
     const [userId, setUserId] = useState(null);
 
-    const handleLogin = async(email, password) => {
+    const handleLogin = async (email, password) => {
         try {
             const response = await fetch('http://localhost:8080/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email: email, password: password})
+                body: JSON.stringify({ email: email, password: password })
             });
             if (!response.ok) {
                 throw new Error('Failed to login');
             }
             const loginResponse = await response.json();
             if (loginResponse.isValid) {
-                setIsAuthenticated(true);
-                setUserName(loginResponse.userName);
-                setUserId(loginResponse.userId);
+                if (loginResponse.isAdmin) {
+                    setIsAdmin(true);
+                    sessionStorage.setItem('isAdmin', 'true');
+                } else {
+                    setIsAuthenticated(true);
+                    setUserName(loginResponse.userName);
+                    setUserId(loginResponse.userId);
+                    sessionStorage.setItem('userName', loginResponse.userName);
+                    sessionStorage.setItem('isAuthenticated', 'true');
+                    sessionStorage.setItem('userId', loginResponse.userId);
+                }
                 setShowLogin(false);
-                sessionStorage.setItem('userName', loginResponse.userName);
-                sessionStorage.setItem('isAuthenticated', 'true');
-                sessionStorage.setItem('userId', loginResponse.userId);
-            }
+            }            
         } catch (error) {
             console.error('Error logging in', error);
         }
@@ -41,30 +47,51 @@ function App() {
         sessionStorage.removeItem('userName');
         sessionStorage.removeItem('isAuthenticated');
         sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('isAdmin');
         setUserName('');
         setIsAuthenticated(false);
-        setUserId(null)
+        setUserId(null);
+        setIsAdmin(false);
     };
+    
 
     const showLoginForm = () => {
         setShowLogin(true);
-        sessionStorage.setItem('showLogin', true)
+        sessionStorage.setItem('showLogin', true);
     };
 
-    useEffect(() => {
-        // Handle user session persistence
-        const userName = sessionStorage.getItem('userName');
-        const isAuthenticated = sessionStorage.getItem('isAuthenticated');
-        const userId = sessionStorage.getItem('userId');
-        if (userName && isAuthenticated && userId) {
-            setUserName(userName);
-            setIsAuthenticated(isAuthenticated);
-            setUserId(userId);
-        }
-    }, [userName, isAuthenticated, userId]);
+    // useEffect(() => {
+    //     // Handle user session persistence
+    //     const userName = sessionStorage.getItem('userName');
+    //     const isAuthenticated = sessionStorage.getItem('isAuthenticated');
+    //     const userId = sessionStorage.getItem('userId');
+    //     const isAdmin = sessionStorage.getItem('isAdmin'); // Retrieve isAdmin from sessionStorage
+    //     if (userName && isAuthenticated && userId) {
+    //         setUserName(userName);
+    //         setIsAuthenticated(isAuthenticated === 'true');
+    //         setUserId(userId);
+    //         setIsAdmin(isAdmin === 'true'); 
+    //     }
+    // }, [userName, isAuthenticated, userId]);
 
     useEffect(() => {
-        // Handle sesson persistence for showing login page
+        const userNameSession = sessionStorage.getItem('userName');
+        const isAuthenticatedSession = sessionStorage.getItem('isAuthenticated');
+        const userIdSession = sessionStorage.getItem('userId');
+        const isAdminSession = sessionStorage.getItem('isAdmin');
+
+        if (isAdminSession === 'true') {
+            setIsAdmin(true);
+        } else if (userNameSession && isAuthenticatedSession === 'true' && userIdSession) {
+            setUserName(userNameSession);
+            setIsAuthenticated(true);
+            setUserId(userIdSession);
+        }
+    }, [userName, isAuthenticated, userId, isAdmin]);
+
+
+    useEffect(() => {
+        // Handle session persistence for showing login page
         const showLogin = sessionStorage.getItem('showLogin');
         if (showLogin) {
             setShowLogin(true);
@@ -91,15 +118,12 @@ function App() {
         }
     };
 
-
     const renderButtons = () => {
         let buttonContent;
 
-        if (isAuthenticated) {
+        if (isAuthenticated || isAdmin) {
             buttonContent = (
-                <>
-                    <Button variant="outlined" color="primary" onClick={handleLogout}>Logout</Button>
-                </>
+                <Button variant="outlined" color="primary" onClick={handleLogout}>Logout</Button>
             );
         } else {
             buttonContent = (
@@ -109,24 +133,28 @@ function App() {
 
         return (
             <>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    width: '100%',
-                    position: 'relative'
-                }}
-            >
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Intro Project
-                </Typography>
-                {buttonContent}
-            </Box>
-            <PostList userId={userId} userName={userName} isAuthenticated={isAuthenticated}></PostList>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '100%',
+                        position: 'relative'
+                    }}
+                >
+                    <Typography variant="h4" component="h1" gutterBottom>
+                        Intro Project
+                    </Typography>
+                    {buttonContent}
+                </Box>
+                <PostList
+                    userId={userId}
+                    userName={userName}
+                    isAuthenticated={isAuthenticated}
+                    isAdmin={isAdmin}
+                />
             </>
         );
-        
     }
 
     return (
@@ -136,7 +164,6 @@ function App() {
             </Box>
         </Container>
     );
-
 }
 
 export default App;
