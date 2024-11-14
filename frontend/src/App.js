@@ -98,6 +98,16 @@ function App() {
         }
     }, [showLogin]);
 
+    // Method for test purposes to set isAuthenticated directly 
+    if (process.env.NODE_ENV === 'test') { 
+        window.setTestState = (newState) => { 
+            setIsAuthenticated(newState.isAuthenticated); 
+            setShowLogin(newState.showLogin); 
+            setUserName(newState.userName); 
+            setUserId(newState.userId);
+        }; 
+    }
+
     const renderLogin = () => {
         if (showLogin) {
             return (
