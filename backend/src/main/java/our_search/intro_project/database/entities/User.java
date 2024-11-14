@@ -1,6 +1,8 @@
 package our_search.intro_project.database.entities;
 
 import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "users")
@@ -21,6 +23,8 @@ public class User {
     @Column(nullable = false, length = 255)
     private String password;
 
+  private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     public User() {
 
     }
@@ -30,6 +34,14 @@ public class User {
         this.name = name;
         this.admin = admin;
         this.password = password;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void encryptPassword() {
+        if (password != null && !password.startsWith("$2a$")) {
+            password = passwordEncoder.encode(password);
+        }
     }
 
     // Getters and Setters
