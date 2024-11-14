@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardContent, Typography } from '@mui/material';
+import { Card, CardHeader, CardContent, Typography, List, ListItem } from '@mui/material';
 import NewComment from './NewComment';
 import React, {  useState } from 'react';
 
