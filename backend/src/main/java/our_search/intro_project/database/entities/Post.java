@@ -1,52 +1,67 @@
 package our_search.intro_project.database.entities;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "posts")
 public class Post {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @Column(nullable = false)
-    private String contents;
+  @Column(nullable = false)
+  private String contents;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+  @ManyToOne
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
-    public Post() {
-    }
-    
-    public Post(String contents, User user) {
-        this.contents = contents;
-        this.user = user;
-    }
+  @Column(nullable = false, updatable = false)
+  private LocalDateTime createdAt;
 
-    // Getters and Setters
-    public Integer getPostId() {
-        return id;
-    }
+  public Post() {}
 
-    public void setPostId(Integer postId) {
-        this.id = postId;
-    }
+  public Post(String contents, User user) {
+    this.contents = contents;
+    this.user = user;
+  }
 
-    public String getContents() {
-        return contents;
-    }
+  @PrePersist
+  protected void onCreate() {
+    this.createdAt = LocalDateTime.now();
+  }
 
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
+  // Getters and Setters
+  public Integer getPostId() {
+    return id;
+  }
 
-    public User getUser() {
-        return user;
-    }
+  public void setPostId(Integer postId) {
+    this.id = postId;
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  public String getContents() {
+    return contents;
+  }
 
+  public void setContents(String contents) {
+    this.contents = contents;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 }

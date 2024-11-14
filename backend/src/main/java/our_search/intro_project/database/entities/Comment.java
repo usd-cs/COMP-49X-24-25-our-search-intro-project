@@ -1,64 +1,80 @@
 package our_search.intro_project.database.entities;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments")
 public class Comment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @Column(nullable = false)
-    private String contents;
+  @Column(nullable = false)
+  private String contents;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+  @ManyToOne
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
+  @ManyToOne
+  @JoinColumn(name = "post_id", nullable = false)
+  private Post post;
 
-    public Comment() {
-    }
-    
-    public Comment(String contents, User user, Post post) {
-        this.contents = contents;
-        this.user = user;
-        this.post = post;
-    }
+  @Column(nullable = false, updatable = false)
+  private LocalDateTime createdAt;
 
-    // Getters and Setters
-    public Integer getCommentId() {
-        return id;
-    }
+  public Comment() {}
 
-    public void setCommentId(Integer commentId) {
-        this.id = commentId;
-    }
+  public Comment(String contents, User user, Post post) {
+    this.contents = contents;
+    this.user = user;
+    this.post = post;
+  }
 
-    public String getContents() {
-        return contents;
-    }
+  @PrePersist
+  protected void onCreate() {
+    this.createdAt = LocalDateTime.now();
+  }
 
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
+  // Getters and Setters
+  public Integer getCommentId() {
+    return id;
+  }
 
-    public User getUser() {
-        return user;
-    }
+  public void setCommentId(Integer commentId) {
+    this.id = commentId;
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  public String getContents() {
+    return contents;
+  }
 
-    public Post getPost() {
-        return post;
-    }
+  public void setContents(String contents) {
+    this.contents = contents;
+  }
 
-    public void setPost(Post post) {
-        this.post = post;
-    }
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public Post getPost() {
+    return post;
+  }
+
+  public void setPost(Post post) {
+    this.post = post;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 }
