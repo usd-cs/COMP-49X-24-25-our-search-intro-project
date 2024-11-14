@@ -14,7 +14,7 @@ import our_search.intro_project.database.entities.User;
 import our_search.intro_project.database.services.CommentService;
 import our_search.intro_project.database.services.UserService;
 
-@RestController
+@RestController("commentDeleteController")
 @RequestMapping("/delete/comment")
 @CrossOrigin(origins = "http://localhost:3000")
 public class DeleteController {
