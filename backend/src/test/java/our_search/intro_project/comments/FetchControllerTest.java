@@ -19,15 +19,15 @@ import our_search.intro_project.database.entities.Comment;
 import our_search.intro_project.database.entities.Post;
 import our_search.intro_project.database.entities.User;
 import our_search.intro_project.database.services.CommentService;
-import our_search.intro_project.comments.controller.CommentFetchController;
+import our_search.intro_project.comments.controller.FetchController;
 import our_search.intro_project.comments.dto.FetchedComment;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = CommentFetchController.class)
-public class CommentFetchControllerTest {
+@WebMvcTest(controllers = FetchController.class)
+public class FetchControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     @Autowired private MockMvc mockMvc;
@@ -48,20 +48,15 @@ public class CommentFetchControllerTest {
         LocalDateTime olderDate = LocalDateTime.of(2000, 1, 1, 1, 1);
         LocalDateTime newerDate = LocalDateTime.of(2001, 1, 1, 1, 1);
 
-        Comment comment1 = new Comment("Comment 1", user, post);
-        comment1.setCommentId(1);
-        comment1.setCreatedAt(olderDate);
-
-        Comment comment2 = new Comment("Comment 2", user, post);
-        comment2.setCommentId(2);
-        comment2.setCreatedAt(newerDate);
+        FetchedComment comment1 = new FetchedComment(1, "Comment 1", "Test User", olderDate);
+        FetchedComment comment2 = new FetchedComment(2, "Comment 2", "Test User", newerDate);
 
         List<FetchedComment> expectedComments =
                 Arrays.asList(
                         new FetchedComment(2, "Comment 2", "testUser", newerDate),
                         new FetchedComment(1, "Comment 1", "testUser", olderDate));
 
-        List<Comment> mockComments = Arrays.asList(comment1, comment2);
+        List<FetchedComment> mockComments = Arrays.asList(comment1, comment2);
         when(commentService.getCommentsByPostId(1)).thenReturn(mockComments);
 
         mockMvc

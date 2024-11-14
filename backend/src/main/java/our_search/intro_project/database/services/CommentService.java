@@ -4,9 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import our_search.intro_project.database.entities.Comment;
 import our_search.intro_project.database.repositories.CommentRepository;
+import our_search.intro_project.comments.dto.FetchedComment;
+import our_search.intro_project.database.comments.dto.GetCommentRequest;
+
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -45,5 +49,16 @@ public class CommentService {
             return true;
         }
         return false;
+    }
+
+    public List<FetchedComment> getCommentsByPostId(Integer postId) {
+        return commentRepository.findByPostId(postId).stream()
+                .map(comment -> new FetchedComment(
+                        comment.getCommentId(),
+                        comment.getContents(),
+                        comment.getUser().getName(),
+                        comment.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
     }
 }
