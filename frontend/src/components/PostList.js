@@ -3,16 +3,16 @@ import Post from "./Post";
 import { Typography, Container, List, ListItem } from "@mui/material";
 import NewPost from './NewPost';
 
-const PostList = ({ userId, userName, isAuthenticated }) => {
+const PostList = ({ userId, userName, isAuthenticated, isAdmin }) => {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
         fetchPosts();
-        const fakePosts = [
-            { userId: 1, userName: 'dtrump', content: 'I am the president of the united states', postId: 3, createdAt: "2024-11-12T10:30:45.123Z" },
-            { userId: 2, userName: 'kharris', content: 'I tried running for president of the united states of america this year, but sadly I lost to donald trump. yall should have voted', postId: 4, createdAt:"2024-11-24T10:30:45.123Z" }
-        ]
-        setPosts(fakePosts);
+        // const fakePosts = [
+        //     { userId: 1, userName: 'dtrump', content: 'I am the president of the united states', postId: 3, createdAt: "2024-11-12T10:30:45.123Z" },
+        //     { userId: 2, userName: 'kharris', content: 'I tried running for president of the united states of america this year, but sadly I lost to donald trump. yall should have voted', postId: 4, createdAt:"2024-11-24T10:30:45.123Z" }
+        // ]
+        // setPosts(fakePosts);
     }, []);
 
     const fetchPosts = async () => {
@@ -54,6 +54,27 @@ const PostList = ({ userId, userName, isAuthenticated }) => {
         }
     };
 
+    const deletePost = async (postId, userIdForThisPost) => {
+        try {
+            const response = await fetch('http://localhost:8080/delete/post', {
+                method: 'DELETE',
+                body: JSON.stringify({ postId: postId, userId: userIdForThisPost})
+            });
+            if (!response.ok) {
+                console.error('Failed to delete post');
+            }
+        } catch (error) {
+            console.error('Error deleting post', error);
+        }
+    };
+
+    const onPostDeleted = async (postId, userIdForThisPost) => {
+        await deletePost(postId, userIdForThisPost);
+
+        // Refresh the posts by calling fetchPosts again
+        fetchPosts();
+    };
+
     const onPostCreated = async (newPostContent, userId) => {
         await createPost(newPostContent, userId);
 
@@ -65,9 +86,7 @@ const PostList = ({ userId, userName, isAuthenticated }) => {
         if (isAuthenticated) {
             return <NewPost userId={userId} userName={userName} onPostCreated={onPostCreated}></NewPost>
         }
-    }
-
-
+    }    
 
     return (
         <Container maxWidth="md">
@@ -78,9 +97,9 @@ const PostList = ({ userId, userName, isAuthenticated }) => {
             {posts.length > 0 ? (
                 <List>
                     {posts.map((post) => (
-                        <React.Fragment key={post.id}>
+                        <React.Fragment key={`post-${post.id}`}>
                             <ListItem data-testid="post-item"> 
-                                <Post postData={post} currentUserName={userName} isAuthenticated={isAuthenticated}/>
+                                <Post postData={post} userId={userId} currentUserName={userName} isAuthenticated={isAuthenticated} isAdmin={isAdmin} onPostDeleted={onPostDeleted} ></Post>
                             </ListItem>
                         </React.Fragment>
                     ))}

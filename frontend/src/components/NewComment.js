@@ -8,7 +8,7 @@ const NewComment = ({ postId, userId, userName, onCommentCreated }) => {
     const handleSubmit = () => {
         if (!newCommentContent.trim()) return;
 
-        onCommentCreated(newCommentContent, postId, userId);
+        onCommentCreated(newCommentContent, userId, postId);
 
         setNewCommentContent('');
     };
