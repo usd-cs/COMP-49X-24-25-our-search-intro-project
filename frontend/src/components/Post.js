@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Comment from './Comment';
 import DeleteCommentOrPosts from './DeleteCommentOrPosts';
 
-const Post = ({ postData, currentUserName, isAuthenticated, isAdmin, onPostDeleted }) => {
+const Post = ({ postData, userId, currentUserName, isAuthenticated, isAdmin, onPostDeleted }) => {
 
   const { postId, userName, content, createdAt } = postData;
   const [comments, setComments] = useState([]);
@@ -13,11 +13,6 @@ const Post = ({ postData, currentUserName, isAuthenticated, isAdmin, onPostDelet
     if (postId) {
       fetchComments(postId);
     }
-    // const fakeComments = [
-    //     { userName: 'Student 1', content: 'Hello', createdAt: "2024-11-12T10:30:45.123Z" },
-    //     { userName: 'Peter Park', content: 'Alo', createdAt:"2024-11-24T10:30:45.123Z" }
-    // ]
-    // setComments(fakeComments);
 }, [postId]);
 
   const onCommentCreated = async (commentContent, userId, postId) => {
@@ -26,11 +21,11 @@ const Post = ({ postData, currentUserName, isAuthenticated, isAdmin, onPostDelet
   };
 
 
-  const deleteComment = async (commentId) => {
+  const deleteComment = async (commentId, userIdForThisComment) => {
     try {
         const response = await fetch('http://localhost:8080/delete/comment', {
             method: 'DELETE',
-            body: JSON.stringify({ commentId: commentId })
+            body: JSON.stringify({ commentId: commentId, userId: userIdForThisComment })
         });
         if (!response.ok) {
             console.error('Failed to delete comment');
@@ -40,8 +35,8 @@ const Post = ({ postData, currentUserName, isAuthenticated, isAdmin, onPostDelet
     }
 };
 
-const onCommentDeleted = async (commentId) => {
-    await deleteComment(commentId);
+const onCommentDeleted = async (commentId, userIdForThisComment) => {
+    await deleteComment(commentId, userIdForThisComment);
 
     // Refresh the posts by calling fetchPosts again
     fetchComments(postId);
@@ -104,7 +99,7 @@ const onCommentDeleted = async (commentId) => {
           isAdmin && (
             <DeleteCommentOrPosts
               postId={postData.postId}
-              onDelete={() => onPostDeleted(postId)}
+              onDelete={() => onPostDeleted(postId, userId)}
             />
           )
         }
@@ -121,9 +116,9 @@ const onCommentDeleted = async (commentId) => {
         (
               <List>
                   {comments.map((comment) => (
-                      <React.Fragment key={comment.id}>
+                      <React.Fragment key={`comment-${comment.commentId}`}>
                           <ListItem>
-                              <Comment commentData={comment} isAdmin={isAdmin} onCommentDeleted={onCommentDeleted} />
+                              <Comment commentData={comment} isAdmin={isAdmin} onCommentDeleted={onCommentDeleted} userId={userId} />
                           </ListItem>
                       </React.Fragment>
                   ))}
@@ -133,8 +128,8 @@ const onCommentDeleted = async (commentId) => {
 
         {isAuthenticated && (
           <NewComment
-            postId={postData.postId}
-            userId={postData.userId}
+            postId={postId}
+            userId={userId}
             userName={currentUserName}
             onCommentCreated={onCommentCreated}
           />

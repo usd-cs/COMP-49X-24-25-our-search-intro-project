@@ -3,7 +3,7 @@ import { Typography, Box, Paper, Avatar, Stack} from "@mui/material";
 import { styled } from '@mui/material/styles'
 import DeleteCommentOrPosts from "./DeleteCommentOrPosts";
 
-const Comment = ({ commentData, isAdmin, onCommentDeleted }) => {
+const Comment = ({ commentData, isAdmin, onCommentDeleted, userId }) => {
     const { userName, content, createdAt, commentId} = commentData;   
 
     const Item = styled(Paper)(({ theme }) => ({
@@ -42,7 +42,7 @@ const Comment = ({ commentData, isAdmin, onCommentDeleted }) => {
                 {content}
             </Typography>
             {isAdmin && (
-                <DeleteCommentOrPosts commentId={commentId} onDelete={() => onCommentDeleted(commentId)}
+                <DeleteCommentOrPosts commentId={commentId} onDelete={() => onCommentDeleted(commentId, userId)}
                 />
             )}
         </Item>

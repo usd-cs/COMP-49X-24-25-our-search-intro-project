@@ -54,11 +54,11 @@ const PostList = ({ userId, userName, isAuthenticated, isAdmin }) => {
         }
     };
 
-    const deletePost = async (postId) => {
+    const deletePost = async (postId, userIdForThisPost) => {
         try {
             const response = await fetch('http://localhost:8080/delete/post', {
                 method: 'DELETE',
-                body: JSON.stringify({ postId: postId })
+                body: JSON.stringify({ postId: postId, userId: userIdForThisPost})
             });
             if (!response.ok) {
                 console.error('Failed to delete post');
@@ -68,8 +68,8 @@ const PostList = ({ userId, userName, isAuthenticated, isAdmin }) => {
         }
     };
 
-    const onPostDeleted = async (postId) => {
-        await deletePost(postId);
+    const onPostDeleted = async (postId, userIdForThisPost) => {
+        await deletePost(postId, userIdForThisPost);
 
         // Refresh the posts by calling fetchPosts again
         fetchPosts();
@@ -97,9 +97,9 @@ const PostList = ({ userId, userName, isAuthenticated, isAdmin }) => {
             {posts.length > 0 ? (
                 <List>
                     {posts.map((post) => (
-                        <React.Fragment key={post.id}>
+                        <React.Fragment key={`post-${post.id}`}>
                             <ListItem data-testid="post-item"> 
-                                <Post postData={post} currentUserName={userName} isAuthenticated={isAuthenticated} isAdmin={isAdmin} onPostDeleted={onPostDeleted} ></Post>
+                                <Post postData={post} userId={userId} currentUserName={userName} isAuthenticated={isAuthenticated} isAdmin={isAdmin} onPostDeleted={onPostDeleted} ></Post>
                             </ListItem>
                         </React.Fragment>
                     ))}
