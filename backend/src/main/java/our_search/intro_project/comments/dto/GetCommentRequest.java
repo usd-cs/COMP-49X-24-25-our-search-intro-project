@@ -1,4 +1,4 @@
-package our_search.intro_project.database.comments.dto;
+package our_search.intro_project.comments.dto;
 
 public class GetCommentRequest {
     private Integer postId;

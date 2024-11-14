@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import our_search.intro_project.comments.dto.GetCommentRequest;
 import our_search.intro_project.database.entities.Comment;
 import our_search.intro_project.database.entities.Post;
 import our_search.intro_project.database.entities.User;
@@ -22,7 +23,7 @@ import our_search.intro_project.database.services.CommentService;
 import our_search.intro_project.comments.controller.FetchController;
 import our_search.intro_project.comments.dto.FetchedComment;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,26 +42,34 @@ public class FetchControllerTest {
 
     @Test
     void testFetchCommentsByPostId_existingComments_returnsSortedResponse() throws Exception {
+
         User user = new User("test@test.com", "testUser", false, "password");
-        Post post = new Post("Post Content", user);
+        Post post = new Post("Post content", user);
         post.setPostId(1);
 
         LocalDateTime olderDate = LocalDateTime.of(2000, 1, 1, 1, 1);
         LocalDateTime newerDate = LocalDateTime.of(2001, 1, 1, 1, 1);
 
-        FetchedComment comment1 = new FetchedComment(1, "Comment 1", "testUser", olderDate);
-        FetchedComment comment2 = new FetchedComment(2, "Comment 2", "testUser", newerDate);
+        Comment comment1 = new Comment("Comment 1", user, post);
+        comment1.setCommentId(1);
+        comment1.setCreatedAt(olderDate);
+
+        Comment comment2 = new Comment("Comment 2", user, post);
+        comment2.setCommentId(2);
+        comment2.setCreatedAt(newerDate);
 
         List<FetchedComment> expectedComments =
                 Arrays.asList(
                         new FetchedComment(2, "Comment 2", "testUser", newerDate),
                         new FetchedComment(1, "Comment 1", "testUser", olderDate));
 
-        List<FetchedComment> mockComments = Arrays.asList(comment1, comment2);
+        List<Comment> mockComments = Arrays.asList(comment1, comment2);
         when(commentService.getCommentsByPostId(1)).thenReturn(mockComments);
 
+        GetCommentRequest request = new GetCommentRequest(1);
+
         mockMvc
-                .perform(get("/comments?postId=1").contentType(MediaType.APPLICATION_JSON))
+                .perform(post("/comment").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedComments), true));
     }
@@ -69,9 +78,15 @@ public class FetchControllerTest {
     void testFetchCommentsByPostId_noComments_returnsEmptyResponse() throws Exception {
         when(commentService.getCommentsByPostId(1)).thenReturn(List.of());
 
+        GetCommentRequest request = new GetCommentRequest(1);
+
         mockMvc
-                .perform(get("/comments?postId=1").contentType(MediaType.APPLICATION_JSON))
+                .perform(
+                        post("/comment")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
 }
+
