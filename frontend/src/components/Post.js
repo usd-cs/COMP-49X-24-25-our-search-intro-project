@@ -5,7 +5,7 @@ import React, {  useState } from 'react';
 const Post = ({ postData, currentUserName, isAuthenticated }) => {
 
     const { userName, content, createdAt } = postData;
-    const [comments, setComments] = useState([]);
+    const [comments] = useState([]);
 
 
     const handleCommentCreated = async (commentContent, userId, postId) => {
