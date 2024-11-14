@@ -62,7 +62,7 @@ describe('PostList', () => {
     render(<PostList userId={userId} userName={userName} isAuthenticated={true}/>);
 
     await waitFor(() => {
-      expect(screen.getAllByRole('listitem')).toHaveLength(posts.length);
+      expect(screen.getAllByTestId('post-item')).toHaveLength(posts.length);
     });
   });
 });
